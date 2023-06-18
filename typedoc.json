@@ -1,0 +1,20 @@
+{
+  "name": "Doubter",
+  "includeVersion": true,
+  "excludePrivate": true,
+  "excludeExternals": true,
+  "excludeInternal": true,
+  "disableSources": true,
+  "readme": "none",
+  "externalSymbolLinkMappings": {
+    "doubter": {
+      "StringShape": "https://smikhalevski.github.io/doubter/classes/doubter_core.StringShape.html",
+      "IssueOptions": "https://smikhalevski.github.io/doubter/interfaces/doubter_core.IssueOptions.html",
+      "Message": "https://smikhalevski.github.io/doubter/types/doubter_core.Message.html"
+    },
+    "doubter/core": {
+      "Issue.message": "https://smikhalevski.github.io/doubter/interfaces/doubter_core.Issues.html#message",
+      "Issue.meta": "https://smikhalevski.github.io/doubter/interfaces/doubter_core.Issues.html#meta"
+    }
+  }
+}
