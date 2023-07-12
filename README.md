@@ -19,7 +19,7 @@ const emailShape = d.string().email();
 emailShape.parse('foo@bar.com');
 // ⮕ 'foo@bar.com'
 
-emailShape.parse('Bill');
+emailShape.parse('foo');
 // ❌ ValidationError: string_format at /: Must be an email
 ```
 
@@ -37,6 +37,41 @@ const bicShape = d.string().bic();
 bicShape.parse('BOFAUS3N');
 // ⮕ 'BOFAUS3N'
 
-bicShape.parse('Gary');
+bicShape.parse('BOFA');
 // ❌ ValidationError: string_format at /: Must be a BIC or SWIFT code
 ```
+
+Format checks raise issues with `"string.format"` code.
+
+```ts
+d.string().email().try('foo');
+```
+
+The code above would return an `Err` result:
+
+```json5
+{
+  ok: false,
+  issues: [
+    {
+      code: 'string.format',
+      input: 'foo',
+      message: 'Must be an email',
+      param: {
+        format: 'email',
+        allowDisplayName: false,
+        allowIPDomain: false,
+        allowUTF8LocalPart: true,
+        blacklistedChars: '',
+        hostBlacklist: [],
+        hostWhitelist: [],
+        ignoreMaxLength: false,
+        requireDisplayName: false,
+        requireTLD: true,
+      },
+    },
+  ],
+}
+```
+
+Use `.issues[].param.format` to detect the exact format that was violated.

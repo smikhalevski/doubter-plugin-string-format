@@ -6,7 +6,7 @@ export const FORMAT_ISIN = 'isin';
 export const FORMAT_FQDN = 'fqdn';
 export const FORMAT_EMAIL = 'email';
 
-export const CODE_FORMAT = 'string_format';
+export const CODE_FORMAT = 'string.format';
 
 export const MESSAGE_LUHN = 'Must be a Luhn number';
 export const MESSAGE_BIC = 'Must be a BIC or SWIFT code';
