@@ -16,7 +16,6 @@ import { IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssueFactory, extractOptions } from 'doubter/utils';
 import isIMEI from 'validator/lib/isIMEI';
 import { CODE_FORMAT, FORMAT_IMEI, MESSAGE_IMEI } from './constants';
-import { pushIssue } from './utils';
 
 export interface IMEIOptions extends IssueOptions {
   /**
@@ -55,7 +54,7 @@ export default function (prototype: StringShape): void {
     return this.use(
       next => (input, output, options, issues) => {
         if (!isIMEI(input, imeiOptions)) {
-          issues = pushIssue(issues, issueFactory(output, options));
+          (issues ||= []).push(issueFactory(output, options));
 
           if (options.earlyReturn) {
             return issues;

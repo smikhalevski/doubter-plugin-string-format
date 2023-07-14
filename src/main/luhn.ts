@@ -16,7 +16,6 @@ import { IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssueFactory } from 'doubter/utils';
 import isLuhnNumber from 'validator/lib/isLuhnNumber';
 import { CODE_FORMAT, FORMAT_LUHN, MESSAGE_LUHN } from './constants';
-import { pushIssue } from './utils';
 
 declare module 'doubter/core' {
   interface StringShape {
@@ -41,7 +40,7 @@ export default function (prototype: StringShape): void {
     return this.use(
       next => (input, output, options, issues) => {
         if (!isLuhnNumber(input)) {
-          issues = pushIssue(issues, issueFactory(output, options));
+          (issues ||= []).push(issueFactory(output, options));
 
           if (options.earlyReturn) {
             return issues;

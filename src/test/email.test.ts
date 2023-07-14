@@ -13,7 +13,7 @@ describe('email', () => {
       ok: false,
       issues: [
         {
-          code: 'string_format',
+          code: 'string.format',
           input: 'foo',
           message: 'Must be an email',
           param: {

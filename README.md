@@ -6,7 +6,9 @@ String format validation [plugin for Doubter.](https://github.com/smikhalevski/d
 npm install --save-prod doubter @doubter/plugin-string-format
 ```
 
-How to enable the plugin:
+# How to use?
+
+Import and enable the plugin:
 
 ```ts
 import * as d from 'doubter';
@@ -20,10 +22,10 @@ emailShape.parse('foo@bar.com');
 // ⮕ 'foo@bar.com'
 
 emailShape.parse('foo');
-// ❌ ValidationError: string_format at /: Must be an email
+// ❌ ValidationError: string.format at /: Must be an email
 ```
 
-Or cherry-pick separate format checkers:
+Cherry-pick separate format checkers:
 
 ```ts
 import * as d from 'doubter';
@@ -37,9 +39,11 @@ const bicShape = d.string().bic();
 bicShape.parse('BOFAUS3N');
 // ⮕ 'BOFAUS3N'
 
-bicShape.parse('BOFA');
-// ❌ ValidationError: string_format at /: Must be a BIC or SWIFT code
+bicShape.parse('QUX');
+// ❌ ValidationError: string.format at /: Must be a BIC or SWIFT code
 ```
+
+# Validation issues
 
 Format checks raise issues with `"string.format"` code.
 

@@ -17,7 +17,6 @@ import { IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssueFactory } from 'doubter/utils';
 import isISIN from 'validator/lib/isISIN';
 import { CODE_FORMAT, FORMAT_ISIN, MESSAGE_ISIN } from './constants';
-import { pushIssue } from './utils';
 
 declare module 'doubter/core' {
   interface StringShape {
@@ -43,7 +42,7 @@ export default function (prototype: StringShape): void {
     return this.use(
       next => (input, output, options, issues) => {
         if (!isISIN(input)) {
-          issues = pushIssue(issues, issueFactory(output, options));
+          (issues ||= []).push(issueFactory(output, options));
 
           if (options.earlyReturn) {
             return issues;

@@ -1,5 +1,6 @@
 /**
- * The plugin that enhances {@linkcode @doubter/plugin-string-format!StringShape} with the fully qualified domain name check.
+ * The plugin that enhances {@linkcode @doubter/plugin-string-format!StringShape} with the fully qualified domain name
+ * check.
  *
  * ```ts
  * import { StringShape } from 'doubter/core';
@@ -15,7 +16,6 @@ import { IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssueFactory, extractOptions } from 'doubter/utils';
 import isFQDN from 'validator/lib/isFQDN';
 import { CODE_FORMAT, FORMAT_FQDN, MESSAGE_FQDN } from './constants';
-import { pushIssue } from './utils';
 
 export interface FQDNOptions extends IssueOptions {
   /**
@@ -100,7 +100,7 @@ export default function (prototype: StringShape): void {
     return this.use(
       next => (input, output, options, issues) => {
         if (!isFQDN(input, fqdnOptions)) {
-          issues = pushIssue(issues, issueFactory(output, options));
+          (issues ||= []).push(issueFactory(output, options));
 
           if (options.earlyReturn) {
             return issues;

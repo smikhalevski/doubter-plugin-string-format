@@ -15,7 +15,6 @@ import { IssueOptions, Message, StringShape } from 'doubter/core';
 import isEmail from 'validator/lib/isEmail';
 import { createIssueFactory, extractOptions } from 'doubter/utils';
 import { CODE_FORMAT, FORMAT_EMAIL, MESSAGE_EMAIL } from './constants';
-import { pushIssue } from './utils';
 
 export interface EmailOptions extends IssueOptions {
   /**
@@ -134,7 +133,7 @@ export default function (prototype: StringShape): void {
     return this.use(
       next => (input, output, options, issues) => {
         if (!isEmail(input, emailOptions)) {
-          issues = pushIssue(issues, issueFactory(output, options));
+          (issues ||= []).push(issueFactory(output, options));
 
           if (options.earlyReturn) {
             return issues;

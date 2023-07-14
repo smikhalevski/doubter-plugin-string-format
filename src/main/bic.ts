@@ -1,5 +1,6 @@
 /**
- * The plugin that enhances {@linkcode @doubter/plugin-string-format!StringShape} with the BIC (Bank Identification Code) check.
+ * The plugin that enhances {@linkcode @doubter/plugin-string-format!StringShape} with the BIC (Bank Identification
+ * Code) check.
  *
  * ```ts
  * import { StringShape } from 'doubter/core';
@@ -15,7 +16,6 @@ import { IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssueFactory } from 'doubter/utils';
 import isBIC from 'validator/lib/isBIC';
 import { CODE_FORMAT, FORMAT_BIC, MESSAGE_BIC } from './constants';
-import { pushIssue } from './utils';
 
 declare module 'doubter/core' {
   interface StringShape {
@@ -40,7 +40,7 @@ export default function (prototype: StringShape): void {
     return this.use(
       next => (input, output, options, issues) => {
         if (!isBIC(input)) {
-          issues = pushIssue(issues, issueFactory(output, options));
+          (issues ||= []).push(issueFactory(output, options));
 
           if (options.earlyReturn) {
             return issues;
