@@ -6,6 +6,8 @@ String format validation [plugin for Doubter.](https://github.com/smikhalevski/d
 npm install --save-prod doubter @doubter/plugin-string-format
 ```
 
+🔎 [Check out the API Docs.](https://smikhalevski.github.io/doubter-plugin-string-format/next)
+
 # How to use?
 
 Import and enable the plugin:

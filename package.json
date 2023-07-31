@@ -53,7 +53,7 @@
     "build": "tsc --project tsconfig.build.json && rollup --config && cp package.json README.md LICENSE.txt lib/ && cd lib && npm pkg delete scripts devDependencies",
     "clean": "rimraf gen lib docs coverage",
     "test": "jest",
-    "docs": "typedoc src/main/index.typedoc.ts src/main/operation/*.ts"
+    "docs": "typedoc src/main/{index.typedoc,luhn,mime,imei,email,fqdn,isin,bic}.ts"
   },
   "repository": {
     "type": "git",
@@ -88,6 +88,7 @@
     "ts-jest": "^29.1.1",
     "tslib": "^2.6.0",
     "typedoc": "^0.24.8",
+    "typedoc-custom-css": "github:smikhalevski/typedoc-custom-css#master",
     "typescript": "^5.1.6"
   },
   "peerDependencies": {
