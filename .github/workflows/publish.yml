@@ -10,57 +10,48 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - uses: actions/setup-node@v3
         with:
           node-version: "18"
           cache: npm
           registry-url: "https://registry.npmjs.org"
 
-      - run: npm ci
-      - run: npm run build
-      - run: npm run docs
-      - run: npm test
-
-      - name: Publish
-        run: |
-          cd ./lib
-          npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
       - name: Configure git user
         run: |
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
 
-      - name: Update docs
+      - run: npm ci
+      - run: npm run build
+      - run: npm run docs
+      - run: npm test
+
+      - name: Publish package
+        run: |
+          cd ./lib
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish docs
         run: |
           set -x
 
-          TEMP_DIR=$(mktemp -d)
-          mv ./docs $TEMP_DIR
+          mv ./docs /tmp/docs
 
           git fetch origin ghpages:ghpages
           git checkout ghpages
           git rm -rf .
           git clean -fxd
           
-          cp -R $TEMP_DIR/docs/. .
+          cp -R /tmp/docs/. .
 
           git add .
-          git commit -m "Updated docs ($(git rev-parse --short $GITHUB_SHA))"
+          git commit -m "Updated docs (${GITHUB_SHA::7})"
           git push origin ghpages
 
-      - name: Update latest
-        run: |
-          set -x
-
-          git reset HEAD --hard
-          git fetch origin master:master
-          git checkout master
-          git checkout -b latest
-          git push --force origin latest
-
-      - run: gh release create ${{ github.ref_name }} --generate-notes --draft
+      - name: Create release draft
+        run: gh release create ${{ github.ref_name }} --generate-notes --draft
         env:
           GH_TOKEN: ${{ github.token }}
