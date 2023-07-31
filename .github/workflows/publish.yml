@@ -27,12 +27,12 @@ jobs:
       - run: npm run docs
       - run: npm test
 
-#      - name: Publish package
-#        run: |
-#          cd ./lib
-#          npm publish --access public
-#        env:
-#          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish package
+        run: |
+          cd ./lib
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish docs
         run: |
