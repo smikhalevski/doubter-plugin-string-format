@@ -1,5 +1,6 @@
 import * as d from 'doubter/core';
 import enableEmailFormat from '../main/email';
+import { CODE_FORMAT, FORMAT_EMAIL, MESSAGE_EMAIL } from '../main/constants';
 
 enableEmailFormat(d.StringShape.prototype);
 
@@ -13,11 +14,11 @@ describe('email', () => {
       ok: false,
       issues: [
         {
-          code: 'string.format',
+          code: CODE_FORMAT,
           input: 'foo',
-          message: 'Must be an email',
+          message: MESSAGE_EMAIL,
           param: {
-            format: 'email',
+            format: FORMAT_EMAIL,
             allowDisplayName: false,
             allowIPDomain: false,
             allowUTF8LocalPart: true,
