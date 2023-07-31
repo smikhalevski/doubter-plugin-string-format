@@ -6,7 +6,11 @@ String format validation [plugin for Doubter.](https://github.com/smikhalevski/d
 npm install --save-prod doubter @doubter/plugin-string-format
 ```
 
-How to enable the plugin:
+🔎 [Check out the API Docs.](https://smikhalevski.github.io/doubter-plugin-string-format/next)
+
+# How to use?
+
+Import and enable the plugin:
 
 ```ts
 import * as d from 'doubter';
@@ -19,11 +23,11 @@ const emailShape = d.string().email();
 emailShape.parse('foo@bar.com');
 // ⮕ 'foo@bar.com'
 
-emailShape.parse('Bill');
-// ❌ ValidationError: string_format at /: Must be an email
+emailShape.parse('foo');
+// ❌ ValidationError: string.format at /: Must be an email
 ```
 
-Or cherry-pick separate format checkers:
+Cherry-pick separate format checkers:
 
 ```ts
 import * as d from 'doubter';
@@ -37,6 +41,43 @@ const bicShape = d.string().bic();
 bicShape.parse('BOFAUS3N');
 // ⮕ 'BOFAUS3N'
 
-bicShape.parse('Gary');
-// ❌ ValidationError: string_format at /: Must be a BIC or SWIFT code
+bicShape.parse('QUX');
+// ❌ ValidationError: string.format at /: Must be a BIC or SWIFT code
 ```
+
+# Validation issues
+
+Format checks raise issues with `"string.format"` code.
+
+```ts
+d.string().email().try('foo');
+```
+
+The code above would return an `Err` result:
+
+```json5
+{
+  ok: false,
+  issues: [
+    {
+      code: 'string.format',
+      input: 'foo',
+      message: 'Must be an email',
+      param: {
+        format: 'email',
+        allowDisplayName: false,
+        allowIPDomain: false,
+        allowUTF8LocalPart: true,
+        blacklistedChars: '',
+        hostBlacklist: [],
+        hostWhitelist: [],
+        ignoreMaxLength: false,
+        requireDisplayName: false,
+        requireTLD: true,
+      },
+    },
+  ],
+}
+```
+
+Use `.issues[].param.format` to detect the exact format that was violated.

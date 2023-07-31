@@ -1,6 +1,6 @@
 /**
- * The plugin that enhances {@linkcode @doubter/plugin-string-format!StringShape} with the [MIME type](https://en.wikipedia.org/wiki/Media_type)
- * check.
+ * The plugin that enhances {@linkcode @doubter/plugin-string-format!StringShape} with the
+ * [MIME type](https://en.wikipedia.org/wiki/Media_type) check.
  *
  * ```ts
  * import { StringShape } from 'doubter/core';
@@ -16,7 +16,6 @@ import { IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssueFactory } from 'doubter/utils';
 import isMimeType from 'validator/lib/isMimeType';
 import { CODE_FORMAT, FORMAT_MIME, MESSAGE_MIME } from './constants';
-import { pushIssue } from './utils';
 
 declare module 'doubter/core' {
   interface StringShape {
@@ -41,7 +40,7 @@ export default function (prototype: StringShape): void {
     return this.use(
       next => (input, output, options, issues) => {
         if (!isMimeType(input)) {
-          issues = pushIssue(issues, issueFactory(output, options));
+          (issues ||= []).push(issueFactory(output, options));
 
           if (options.earlyReturn) {
             return issues;

@@ -1,20 +1,23 @@
 {
-  "name": "Doubter",
+  "name": "@doubter/plugin-string-format",
   "includeVersion": true,
   "excludePrivate": true,
   "excludeExternals": true,
   "excludeInternal": true,
   "disableSources": true,
+  "hideGenerator": true,
   "readme": "none",
+  "tsconfig": "./tsconfig.build.json",
+  "customCss": "./node_modules/typedoc-custom-css/custom.css",
   "externalSymbolLinkMappings": {
     "doubter": {
-      "StringShape": "https://smikhalevski.github.io/doubter/classes/doubter_core.StringShape.html",
-      "IssueOptions": "https://smikhalevski.github.io/doubter/interfaces/doubter_core.IssueOptions.html",
-      "Message": "https://smikhalevski.github.io/doubter/types/doubter_core.Message.html"
+      "StringShape": "https://smikhalevski.github.io/doubter/latest/classes/doubter_core.StringShape.html",
+      "IssueOptions": "https://smikhalevski.github.io/doubter/latest/interfaces/doubter_core.IssueOptions.html",
+      "Message": "https://smikhalevski.github.io/doubter/latest/types/doubter_core.Message.html"
     },
     "doubter/core": {
-      "Issue.message": "https://smikhalevski.github.io/doubter/interfaces/doubter_core.Issues.html#message",
-      "Issue.meta": "https://smikhalevski.github.io/doubter/interfaces/doubter_core.Issues.html#meta"
+      "Issue.message": "https://smikhalevski.github.io/doubter/latest/interfaces/doubter_core.Issue.html#message",
+      "Issue.meta": "https://smikhalevski.github.io/doubter/latest/interfaces/doubter_core.Issue.html#meta"
     }
   }
 }
