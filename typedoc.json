@@ -16,8 +16,8 @@
       "Message": "https://smikhalevski.github.io/doubter/latest/types/doubter_core.Message.html"
     },
     "doubter/core": {
-      "Issue.message": "https://smikhalevski.github.io/doubter/latest/interfaces/doubter_core.Issues.html#message",
-      "Issue.meta": "https://smikhalevski.github.io/doubter/latest/interfaces/doubter_core.Issues.html#meta"
+      "Issue.message": "https://smikhalevski.github.io/doubter/latest/interfaces/doubter_core.Issue.html#message",
+      "Issue.meta": "https://smikhalevski.github.io/doubter/latest/interfaces/doubter_core.Issue.html#meta"
     }
   }
 }
