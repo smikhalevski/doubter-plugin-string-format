@@ -53,7 +53,7 @@
     "build": "tsc --project tsconfig.build.json && rollup --config && cp package.json README.md LICENSE.txt lib/ && cd lib && npm pkg delete scripts devDependencies",
     "clean": "rimraf gen lib docs coverage",
     "test": "jest",
-    "docs": "typedoc src/main/{index.typedoc,luhn,mime,imei,email,fqdn,isin,bic}.ts"
+    "docs": "typedoc src/main/index.typedoc.ts src/main/luhn.ts src/main/mime.ts src/main/imei.ts src/main/email.ts src/main/fqdn.ts src/main/isin.ts src/main/bic.ts"
   },
   "repository": {
     "type": "git",
