@@ -1,5 +1,5 @@
 /**
- * The plugin that enhances {@linkcode @doubter/plugin-string-format!StringShape} with additional checks.
+ * The plugin that enhances {@link plugin-string-format!StringShape StringShape} with additional checks.
  *
  * ```ts
  * import { StringShape } from 'doubter/core';
@@ -8,15 +8,15 @@
  * enableStringFormat(StringShape.prototype);
  * ```
  *
- * @module @doubter/plugin-string-format
+ * @module plugin-string-format
  */
 
-export * from './index';
+export * from './src/main';
 
 import { StringShape } from 'doubter/core';
 
 /**
- * This a slice from {@linkcode doubter!StringShape doubter/core/StringShape} that contains only methods added by this
+ * This a slice from {@link doubter!StringShape doubter/core/StringShape} that contains only methods added by this
  * plugin.
  */
 interface StringShape_ extends Pick<StringShape, 'bic' | 'email' | 'fqdn' | 'imei' | 'isin' | 'luhn' | 'mime'> {}

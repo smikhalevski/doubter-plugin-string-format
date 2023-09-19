@@ -1,27 +1,42 @@
 const nodeResolve = require('@rollup/plugin-node-resolve');
 const dts = require('rollup-plugin-dts');
+const path = require('path');
+const fs = require('fs');
 
-module.exports = ['index', 'bic', 'email', 'fqdn', 'imei', 'isin', 'luhn', 'mime'].flatMap((name, _, arr) => [
-  {
-    input: './gen/' + name + '.js',
-    output: [
+module.exports = fs
+  .readdirSync('src/main')
+  .filter(it => it !== 'internal')
+  .map(it => path.basename(it, '.ts'))
+  .flatMap((input, _, inputs) => {
+    const external = inputs.map(input => RegExp('\\./' + input)).concat(/^validator|^doubter/);
+
+    return [
       {
-        file: './lib/' + name + '.js',
-        format: 'cjs',
+        input: `gen/${input}.js`,
+        output: [
+          { file: `lib/${input}.js`, format: 'cjs' },
+          {
+            file: `lib/${input}.mjs`,
+            format: 'es',
+            paths: id => id.startsWith('validator') && id.replace('validator', 'validator/es'),
+          },
+        ],
+        plugins: [
+          nodeResolve(),
+
+          // Append a file extension to relative imports and exports
+          {
+            renderChunk: (code, chunk) =>
+              code.replace(/(require\(|from )'\.[^']+/g, '$&' + path.extname(chunk.fileName)),
+          },
+        ],
+        external,
       },
       {
-        file: './lib/' + name + '.mjs',
-        format: 'es',
-        paths: id => id.startsWith('validator') && id.replace('validator', 'validator/es'),
+        input: `gen/${input}.d.ts`,
+        output: { file: `lib/${input}.d.ts`, format: 'es' },
+        plugins: [dts.default()],
+        external,
       },
-    ],
-    plugins: [nodeResolve()],
-    external: arr.map(name => RegExp(name + '$')).concat(/^validator|^doubter/),
-  },
-  {
-    input: './gen/' + name + '.d.ts',
-    output: { file: './lib/' + name + '.d.ts', format: 'es' },
-    plugins: [dts.default()],
-    external: /^validator|^doubter$/,
-  },
-]);
+    ];
+  });

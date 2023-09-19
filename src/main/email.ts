@@ -1,5 +1,5 @@
 /**
- * The plugin that enhances {@linkcode @doubter/plugin-string-format!StringShape} with the email check.
+ * The plugin that enhances {@link plugin-string-format!StringShape StringShape} with the email check.
  *
  * ```ts
  * import { StringShape } from 'doubter/core';
@@ -8,13 +8,13 @@
  * enableEmailFormat(StringShape.prototype);
  * ```
  *
- * @module @doubter/plugin-string-format/email
+ * @module plugin-string-format/email
  */
 
 import { IssueOptions, Message, StringShape } from 'doubter/core';
-import isEmail from 'validator/lib/isEmail';
+import isEmail from 'validator/lib/isEmail.js';
 import { createIssueFactory, extractOptions } from 'doubter/utils';
-import { CODE_FORMAT, FORMAT_EMAIL, MESSAGE_EMAIL } from './constants';
+import { CODE_FORMAT, FORMAT_EMAIL, MESSAGE_EMAIL } from './internal/constants';
 
 export interface EmailOptions extends IssueOptions {
   /**
@@ -83,13 +83,13 @@ declare module 'doubter/core' {
      * @param options The constraint options or an issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
-     * @plugin {@link @doubter/plugin-string-format/email!}
+     * @plugin {@link plugin-string-format/email! plugin-string-format/email}
      */
     email(options?: EmailOptions | Message): this;
   }
 }
 
-export default function (prototype: StringShape): void {
+export default function enableEmailFormat(prototype: StringShape): void {
   prototype.email = function (options) {
     const {
       requireDisplayName = false,

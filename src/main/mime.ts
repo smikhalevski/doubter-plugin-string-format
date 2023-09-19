@@ -1,5 +1,5 @@
 /**
- * The plugin that enhances {@linkcode @doubter/plugin-string-format!StringShape} with the
+ * The plugin that enhances {@link plugin-string-format!StringShape StringShape} with the
  * [MIME type](https://en.wikipedia.org/wiki/Media_type) check.
  *
  * ```ts
@@ -9,13 +9,13 @@
  * enableMIMEFormat(StringShape.prototype);
  * ```
  *
- * @module @doubter/plugin-string-format/mime
+ * @module plugin-string-format/mime
  */
 
 import { IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssueFactory } from 'doubter/utils';
-import isMimeType from 'validator/lib/isMimeType';
-import { CODE_FORMAT, FORMAT_MIME, MESSAGE_MIME } from './constants';
+import isMimeType from 'validator/lib/isMimeType.js';
+import { CODE_FORMAT, FORMAT_MIME, MESSAGE_MIME } from './internal/constants';
 
 declare module 'doubter/core' {
   interface StringShape {
@@ -25,13 +25,13 @@ declare module 'doubter/core' {
      * @param options The constraint options or an issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
-     * @plugin {@link @doubter/plugin-string-format/mime!}
+     * @plugin {@link plugin-string-format/mime! plugin-string-format/mime}
      */
     mime(options?: IssueOptions | Message): this;
   }
 }
 
-export default function (prototype: StringShape): void {
+export default function enableMIMEFormat(prototype: StringShape): void {
   prototype.mime = function (options) {
     const param = { format: FORMAT_MIME };
 

@@ -1,5 +1,5 @@
 /**
- * The plugin that enhances {@linkcode @doubter/plugin-string-format!StringShape} with the BIC (Bank Identification
+ * The plugin that enhances {@link plugin-string-format!StringShape StringShape} with the BIC (Bank Identification
  * Code) check.
  *
  * ```ts
@@ -9,13 +9,13 @@
  * enableBICFormat(StringShape.prototype);
  * ```
  *
- * @module @doubter/plugin-string-format/bic
+ * @module plugin-string-format/bic
  */
 
 import { IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssueFactory } from 'doubter/utils';
-import isBIC from 'validator/lib/isBIC';
-import { CODE_FORMAT, FORMAT_BIC, MESSAGE_BIC } from './constants';
+import isBIC from 'validator/lib/isBIC.js';
+import { CODE_FORMAT, FORMAT_BIC, MESSAGE_BIC } from './internal/constants';
 
 declare module 'doubter/core' {
   interface StringShape {
@@ -25,13 +25,13 @@ declare module 'doubter/core' {
      * @param options The constraint options or an issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
-     * @plugin {@link @doubter/plugin-string-format/bic!}
+     * @plugin {@link plugin-string-format/bic! plugin-string-format/bic}
      */
     bic(options?: IssueOptions | Message): this;
   }
 }
 
-export default function (prototype: StringShape): void {
+export default function enableBICFormat(prototype: StringShape): void {
   prototype.bic = function (options) {
     const param = { format: FORMAT_BIC };
 

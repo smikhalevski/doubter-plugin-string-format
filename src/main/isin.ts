@@ -1,5 +1,5 @@
 /**
- * The plugin that enhances {@linkcode @doubter/plugin-string-format!StringShape} with the
+ * The plugin that enhances {@link plugin-string-format!StringShape StringShape} with the
  * [ISIN](https://en.wikipedia.org/wiki/International_Securities_Identification_Number) (stock/security identifier)
  * check.
  *
@@ -10,13 +10,13 @@
  * enableISINFormat(StringShape.prototype);
  * ```
  *
- * @module @doubter/plugin-string-format/isin
+ * @module plugin-string-format/isin
  */
 
 import { IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssueFactory } from 'doubter/utils';
-import isISIN from 'validator/lib/isISIN';
-import { CODE_FORMAT, FORMAT_ISIN, MESSAGE_ISIN } from './constants';
+import isISIN from 'validator/lib/isISIN.js';
+import { CODE_FORMAT, FORMAT_ISIN, MESSAGE_ISIN } from './internal/constants';
 
 declare module 'doubter/core' {
   interface StringShape {
@@ -27,13 +27,13 @@ declare module 'doubter/core' {
      * @param options The constraint options or an issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
-     * @plugin {@link @doubter/plugin-string-format/isin!}
+     * @plugin {@link plugin-string-format/isin! plugin-string-format/isin}
      */
     isin(options?: IssueOptions | Message): this;
   }
 }
 
-export default function (prototype: StringShape): void {
+export default function enableISINFormat(prototype: StringShape): void {
   prototype.isin = function (options) {
     const param = { format: FORMAT_ISIN };
 

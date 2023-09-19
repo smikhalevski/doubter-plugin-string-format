@@ -1,5 +1,5 @@
 /**
- * The plugin that enhances {@linkcode @doubter/plugin-string-format!StringShape} with the fully qualified domain name
+ * The plugin that enhances {@link plugin-string-format!StringShape StringShape} with the fully qualified domain name
  * check.
  *
  * ```ts
@@ -9,13 +9,13 @@
  * enableFQDNFormat(StringShape.prototype);
  * ```
  *
- * @module @doubter/plugin-string-format/fqdn
+ * @module plugin-string-format/fqdn
  */
 
 import { IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssueFactory, extractOptions } from 'doubter/utils';
-import isFQDN from 'validator/lib/isFQDN';
-import { CODE_FORMAT, FORMAT_FQDN, MESSAGE_FQDN } from './constants';
+import isFQDN from 'validator/lib/isFQDN.js';
+import { CODE_FORMAT, FORMAT_FQDN, MESSAGE_FQDN } from './internal/constants';
 
 export interface FQDNOptions extends IssueOptions {
   /**
@@ -59,13 +59,13 @@ declare module 'doubter/core' {
      * @param options The constraint options or an issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
-     * @plugin {@link @doubter/plugin-string-format/fqdn!}
+     * @plugin {@link plugin-string-format/fqdn! plugin-string-format/fqdn}
      */
     fqdn(options?: FQDNOptions | Message): this;
   }
 }
 
-export default function (prototype: StringShape): void {
+export default function enableFQDNFormat(prototype: StringShape): void {
   prototype.fqdn = function (options) {
     const {
       requireTLD = true,

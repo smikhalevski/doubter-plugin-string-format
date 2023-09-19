@@ -15,7 +15,7 @@ export type * from './isin';
 export type * from './luhn';
 export type * from './mime';
 
-export default function (prototype: StringShape): void {
+export default function enableStringFormat(prototype: StringShape): void {
   enableBICFormat(prototype);
   enableEmailFormat(prototype);
   enableFQDNFormat(prototype);

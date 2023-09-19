@@ -1,5 +1,5 @@
 /**
- * The plugin that enhances {@linkcode @doubter/plugin-string-format!StringShape} with the
+ * The plugin that enhances {@link plugin-string-format!StringShape StringShape} with the
  * [IMEI number](https://en.wikipedia.org/wiki/International_Mobile_Equipment_Identity) check.
  *
  * ```ts
@@ -9,13 +9,13 @@
  * enableIMEIFormat(StringShape.prototype);
  * ```
  *
- * @module @doubter/plugin-string-format/imei
+ * @module plugin-string-format/imei
  */
 
 import { IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssueFactory, extractOptions } from 'doubter/utils';
-import isIMEI from 'validator/lib/isIMEI';
-import { CODE_FORMAT, FORMAT_IMEI, MESSAGE_IMEI } from './constants';
+import isIMEI from 'validator/lib/isIMEI.js';
+import { CODE_FORMAT, FORMAT_IMEI, MESSAGE_IMEI } from './internal/constants';
 
 export interface IMEIOptions extends IssueOptions {
   /**
@@ -35,13 +35,13 @@ declare module 'doubter/core' {
      * @param options The constraint options or an issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
-     * @plugin {@link @doubter/plugin-string-format/imei!}
+     * @plugin {@link plugin-string-format/imei! plugin-string-format/imei}
      */
     imei(options?: IMEIOptions | Message): this;
   }
 }
 
-export default function (prototype: StringShape): void {
+export default function enableIMEIFormat(prototype: StringShape): void {
   prototype.imei = function (options) {
     const { allowHyphens = false } = extractOptions(options);
 

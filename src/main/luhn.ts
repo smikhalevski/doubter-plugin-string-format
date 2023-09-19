@@ -1,5 +1,5 @@
 /**
- * The plugin that enhances {@linkcode @doubter/plugin-string-format!StringShape} with the
+ * The plugin that enhances {@link plugin-string-format!StringShape StringShape} with the
  * [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm) check.
  *
  * ```ts
@@ -9,13 +9,13 @@
  * enableLuhnFormat(StringShape.prototype);
  * ```
  *
- * @module @doubter/plugin-string-format/luhn
+ * @module plugin-string-format/luhn
  */
 
 import { IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssueFactory } from 'doubter/utils';
-import isLuhnNumber from 'validator/lib/isLuhnNumber';
-import { CODE_FORMAT, FORMAT_LUHN, MESSAGE_LUHN } from './constants';
+import isLuhnNumber from 'validator/lib/isLuhnNumber.js';
+import { CODE_FORMAT, FORMAT_LUHN, MESSAGE_LUHN } from './internal/constants';
 
 declare module 'doubter/core' {
   interface StringShape {
@@ -25,13 +25,13 @@ declare module 'doubter/core' {
      * @param options The constraint options or an issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
-     * @plugin {@link @doubter/plugin-string-format/luhn!}
+     * @plugin {@link plugin-string-format/luhn! plugin-string-format/luhn}
      */
     luhn(options?: IssueOptions | Message): this;
   }
 }
 
-export default function (prototype: StringShape): void {
+export default function enableLuhnFormat(prototype: StringShape): void {
   prototype.luhn = function (options) {
     const param = { format: FORMAT_LUHN };
 
