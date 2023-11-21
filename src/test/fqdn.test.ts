@@ -1,8 +1,8 @@
 import * as d from 'doubter/core';
 import enableFQDNFormat from '../main/fqdn';
-import { CODE_FORMAT, FORMAT_FQDN, MESSAGE_FQDN } from '../main/internal/constants';
+import { CODE_FORMAT } from '../main/internal/constants';
 
-enableFQDNFormat(d.StringShape.prototype);
+enableFQDNFormat(d.StringShape);
 
 describe('fqdn', () => {
   test('validates FQDN', () => {
@@ -16,9 +16,9 @@ describe('fqdn', () => {
         {
           code: CODE_FORMAT,
           input: 'foo',
-          message: MESSAGE_FQDN,
+          message: 'Must be an FQDN',
           param: {
-            format: FORMAT_FQDN,
+            format: 'fqdn',
             allowNumericTLD: false,
             allowTrailingDot: false,
             allowUnderscores: false,

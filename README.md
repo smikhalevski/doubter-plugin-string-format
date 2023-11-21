@@ -16,7 +16,7 @@ Import and enable the plugin:
 import * as d from 'doubter';
 import enableStringFormat from '@doubter/plugin-string-format';
 
-enableStringFormat(d.StringShape.prototype);
+enableStringFormat(d.StringShape);
 
 const emailShape = d.string().email();
 
@@ -34,7 +34,7 @@ import * as d from 'doubter';
 // 🟡 Import a single format module
 import enableBICFormat from '@doubter/plugin-string-format/bic';
 
-enableBICFormat(d.StringShape.prototype);
+enableBICFormat(d.StringShape);
 
 const bicShape = d.string().bic();
 
@@ -81,3 +81,24 @@ The code above would return an `Err` result:
 ```
 
 Use `.issues[].param.format` to detect the exact format that was violated.
+
+# Localization
+
+The default issue messages used by this plugin can be globally configured through
+[`d.Shape.message`](https://smikhalevski.github.io/doubter/latest/classes/core.Shape.html#messages):
+
+```ts
+d.Shape.message['string.format.email'] = 'Invalid email';
+
+const emailShape = d.string().email();
+
+emailShape.parse('foo');
+// ❌ ValidationError: string.format at /: Invalid email
+```
+
+Or pass a message directly to a plugin method:
+
+```ts
+d.string().email('Not an email').parse('foo');
+// ❌ ValidationError: string.format at /: Not an email
+```

@@ -6,16 +6,16 @@
  * import { StringShape } from 'doubter/core';
  * import enableIMEIFormat from '@doubter/plugin-string-format/imei';
  *
- * enableIMEIFormat(StringShape.prototype);
+ * enableIMEIFormat(StringShape);
  * ```
  *
  * @module plugin-string-format/imei
  */
 
-import { IssueOptions, Message, StringShape } from 'doubter/core';
+import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssueFactory, extractOptions } from 'doubter/utils';
 import isIMEI from 'validator/lib/isIMEI.js';
-import { CODE_FORMAT, FORMAT_IMEI, MESSAGE_IMEI } from './internal/constants';
+import { CODE_FORMAT } from './internal/constants';
 
 export interface IMEIOptions extends IssueOptions {
   /**
@@ -27,6 +27,10 @@ export interface IMEIOptions extends IssueOptions {
 }
 
 declare module 'doubter/core' {
+  export interface Messages {
+    'string.format.imei': Message | Any;
+  }
+
   interface StringShape {
     /**
      * Check if the string is a valid
@@ -41,26 +45,24 @@ declare module 'doubter/core' {
   }
 }
 
-export default function enableIMEIFormat(prototype: StringShape): void {
-  prototype.imei = function (options) {
+export default function enableIMEIFormat(ctor: typeof StringShape): void {
+  ctor.messages['string.format.imei'] = 'Must be an IMEI';
+
+  ctor.prototype.imei = function (options) {
     const { allowHyphens = false } = extractOptions(options);
 
-    const param = { format: FORMAT_IMEI, allowHyphens };
+    const param = { format: 'imei', allowHyphens };
 
     const imeiOptions = { allow_hyphens: allowHyphens };
 
-    const issueFactory = createIssueFactory(CODE_FORMAT, MESSAGE_IMEI, options, param);
+    const issueFactory = createIssueFactory(CODE_FORMAT, ctor.messages['string.format.imei'], options, param);
 
-    return this.use(
-      next => (input, output, options, issues) => {
-        if (!isIMEI(input, imeiOptions)) {
-          (issues ||= []).push(issueFactory(output, options));
-
-          if (options.earlyReturn) {
-            return issues;
-          }
+    return this.addOperation(
+      (value, param, options) => {
+        if (isIMEI(value, imeiOptions)) {
+          return null;
         }
-        return next(input, output, options, issues);
+        return [issueFactory(value, options)];
       },
       { type: CODE_FORMAT, param }
     );

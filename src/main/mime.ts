@@ -6,18 +6,22 @@
  * import { StringShape } from 'doubter/core';
  * import enableMIMEFormat from '@doubter/plugin-string-format/mime';
  *
- * enableMIMEFormat(StringShape.prototype);
+ * enableMIMEFormat(StringShape);
  * ```
  *
  * @module plugin-string-format/mime
  */
 
-import { IssueOptions, Message, StringShape } from 'doubter/core';
+import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssueFactory } from 'doubter/utils';
 import isMimeType from 'validator/lib/isMimeType.js';
-import { CODE_FORMAT, FORMAT_MIME, MESSAGE_MIME } from './internal/constants';
+import { CODE_FORMAT } from './internal/constants';
 
 declare module 'doubter/core' {
+  export interface Messages {
+    'string.format.mime': Message | Any;
+  }
+
   interface StringShape {
     /**
      * Check if the string matches to a valid [MIME type](https://en.wikipedia.org/wiki/Media_type) format.
@@ -31,22 +35,20 @@ declare module 'doubter/core' {
   }
 }
 
-export default function enableMIMEFormat(prototype: StringShape): void {
-  prototype.mime = function (options) {
-    const param = { format: FORMAT_MIME };
+export default function enableMIMEFormat(ctor: typeof StringShape): void {
+  ctor.messages['string.format.mime'] = 'Must be a MIME type';
 
-    const issueFactory = createIssueFactory(CODE_FORMAT, MESSAGE_MIME, options, param);
+  ctor.prototype.mime = function (options) {
+    const param = { format: 'mime' };
 
-    return this.use(
-      next => (input, output, options, issues) => {
-        if (!isMimeType(input)) {
-          (issues ||= []).push(issueFactory(output, options));
+    const issueFactory = createIssueFactory(CODE_FORMAT, ctor.messages['string.format.mime'], options, param);
 
-          if (options.earlyReturn) {
-            return issues;
-          }
+    return this.addOperation(
+      (value, param, options) => {
+        if (isMimeType(value)) {
+          return null;
         }
-        return next(input, output, options, issues);
+        return [issueFactory(value, options)];
       },
       { type: CODE_FORMAT, param }
     );

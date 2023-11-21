@@ -1,8 +1,8 @@
 import * as d from 'doubter/core';
 import enableBICFormat from '../main/bic';
-import { CODE_FORMAT, FORMAT_BIC, MESSAGE_BIC } from '../main/internal/constants';
+import { CODE_FORMAT } from '../main/internal/constants';
 
-enableBICFormat(d.StringShape.prototype);
+enableBICFormat(d.StringShape);
 
 describe('bic', () => {
   test('validates BIC', () => {
@@ -16,9 +16,9 @@ describe('bic', () => {
         {
           code: CODE_FORMAT,
           input: 'foo',
-          message: MESSAGE_BIC,
+          message: 'Must be a BIC or SWIFT code',
           param: {
-            format: FORMAT_BIC,
+            format: 'bic',
           },
         },
       ],

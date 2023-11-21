@@ -5,7 +5,7 @@
  * import { StringShape } from 'doubter/core';
  * import enableStringFormat from '@doubter/plugin-string-format';
  *
- * enableStringFormat(StringShape.prototype);
+ * enableStringFormat(StringShape);
  * ```
  *
  * @module plugin-string-format

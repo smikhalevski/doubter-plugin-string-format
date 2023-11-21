@@ -6,16 +6,16 @@
  * import { StringShape } from 'doubter/core';
  * import enableFQDNFormat from '@doubter/plugin-string-format/fqdn';
  *
- * enableFQDNFormat(StringShape.prototype);
+ * enableFQDNFormat(StringShape);
  * ```
  *
  * @module plugin-string-format/fqdn
  */
 
-import { IssueOptions, Message, StringShape } from 'doubter/core';
+import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssueFactory, extractOptions } from 'doubter/utils';
 import isFQDN from 'validator/lib/isFQDN.js';
-import { CODE_FORMAT, FORMAT_FQDN, MESSAGE_FQDN } from './internal/constants';
+import { CODE_FORMAT } from './internal/constants';
 
 export interface FQDNOptions extends IssueOptions {
   /**
@@ -52,6 +52,10 @@ export interface FQDNOptions extends IssueOptions {
 }
 
 declare module 'doubter/core' {
+  export interface Messages {
+    'string.format.fqdn': Message | Any;
+  }
+
   interface StringShape {
     /**
      * Check if the string is a fully qualified domain name (e.g. `domain.com`).
@@ -65,8 +69,10 @@ declare module 'doubter/core' {
   }
 }
 
-export default function enableFQDNFormat(prototype: StringShape): void {
-  prototype.fqdn = function (options) {
+export default function enableFQDNFormat(ctor: typeof StringShape): void {
+  ctor.messages['string.format.fqdn'] = 'Must be an FQDN';
+
+  ctor.prototype.fqdn = function (options) {
     const {
       requireTLD = true,
       allowUnderscores = false,
@@ -77,7 +83,7 @@ export default function enableFQDNFormat(prototype: StringShape): void {
     } = extractOptions(options);
 
     const param = {
-      format: FORMAT_FQDN,
+      format: 'fqdn',
       requireTLD,
       allowUnderscores,
       allowTrailingDot,
@@ -95,18 +101,14 @@ export default function enableFQDNFormat(prototype: StringShape): void {
       ignore_max_length: ignoreMaxLength,
     };
 
-    const issueFactory = createIssueFactory(CODE_FORMAT, MESSAGE_FQDN, options, param);
+    const issueFactory = createIssueFactory(CODE_FORMAT, ctor.messages['string.format.fqdn'], options, param);
 
-    return this.use(
-      next => (input, output, options, issues) => {
-        if (!isFQDN(input, fqdnOptions)) {
-          (issues ||= []).push(issueFactory(output, options));
-
-          if (options.earlyReturn) {
-            return issues;
-          }
+    return this.addOperation(
+      (value, param, options) => {
+        if (isFQDN(value, fqdnOptions)) {
+          return null;
         }
-        return next(input, output, options, issues);
+        return [issueFactory(value, options)];
       },
       { type: CODE_FORMAT, param }
     );

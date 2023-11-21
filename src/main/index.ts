@@ -15,12 +15,12 @@ export type * from './isin';
 export type * from './luhn';
 export type * from './mime';
 
-export default function enableStringFormat(prototype: StringShape): void {
-  enableBICFormat(prototype);
-  enableEmailFormat(prototype);
-  enableFQDNFormat(prototype);
-  enableIMEIFormat(prototype);
-  enableISINFormat(prototype);
-  enableLuhnFormat(prototype);
-  enableMIMEFormat(prototype);
+export default function enableStringFormat(ctor: typeof StringShape): void {
+  enableBICFormat(ctor);
+  enableEmailFormat(ctor);
+  enableFQDNFormat(ctor);
+  enableIMEIFormat(ctor);
+  enableISINFormat(ctor);
+  enableLuhnFormat(ctor);
+  enableMIMEFormat(ctor);
 }
