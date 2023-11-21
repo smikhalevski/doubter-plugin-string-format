@@ -1,4 +1,5 @@
 import { StringShape } from 'doubter/core';
+import enableASCIIFormat from './ascii';
 import enableBICFormat from './bic';
 import enableEmailFormat from './email';
 import enableFQDNFormat from './fqdn';
@@ -8,6 +9,7 @@ import enableLuhnFormat from './luhn';
 import enableMIMEFormat from './mime';
 import enableUUIDFormat from './uuid';
 
+export type * from './ascii';
 export type * from './bic';
 export type * from './email';
 export type * from './fqdn';
@@ -18,6 +20,7 @@ export type * from './mime';
 export type * from './uuid';
 
 export default function enableStringFormat(ctor: typeof StringShape): void {
+  enableASCIIFormat(ctor);
   enableBICFormat(ctor);
   enableEmailFormat(ctor);
   enableFQDNFormat(ctor);

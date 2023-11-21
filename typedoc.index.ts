@@ -20,6 +20,6 @@ import { StringShape } from 'doubter/core';
  * plugin.
  */
 interface StringShape_
-  extends Pick<StringShape, 'bic' | 'email' | 'fqdn' | 'imei' | 'isin' | 'luhn' | 'mime' | 'uuid'> {}
+  extends Pick<StringShape, 'ascii' | 'bic' | 'email' | 'fqdn' | 'imei' | 'isin' | 'luhn' | 'mime' | 'uuid'> {}
 
 export { StringShape_ as StringShape };
