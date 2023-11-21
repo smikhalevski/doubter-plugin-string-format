@@ -19,6 +19,7 @@ import { StringShape } from 'doubter/core';
  * This a slice from {@link doubter!StringShape doubter/core/StringShape} that contains only methods added by this
  * plugin.
  */
-interface StringShape_ extends Pick<StringShape, 'bic' | 'email' | 'fqdn' | 'imei' | 'isin' | 'luhn' | 'mime'> {}
+interface StringShape_
+  extends Pick<StringShape, 'bic' | 'email' | 'fqdn' | 'imei' | 'isin' | 'luhn' | 'mime' | 'uuid'> {}
 
 export { StringShape_ as StringShape };
