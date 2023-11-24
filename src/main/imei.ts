@@ -28,6 +28,9 @@ export interface IMEIOptions extends IssueOptions {
 
 declare module 'doubter/core' {
   export interface Messages {
+    /**
+     * @default "Must be an IMEI number"
+     */
     'string.format.imei': Message | Any;
   }
 
@@ -46,7 +49,7 @@ declare module 'doubter/core' {
 }
 
 export default function enableIMEIFormat(ctor: typeof StringShape): void {
-  ctor.messages['string.format.imei'] = 'Must be an IMEI';
+  ctor.messages['string.format.imei'] = 'Must be an IMEI number';
 
   ctor.prototype.imei = function (options) {
     const { allowHyphens = false } = extractOptions(options);

@@ -22,6 +22,9 @@ export interface UUIDOptions extends IssueOptions {
 
 declare module 'doubter/core' {
   export interface Messages {
+    /**
+     * @default "Must be a UUID"
+     */
     'string.format.uuid': Message | Any;
   }
 

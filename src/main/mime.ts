@@ -19,6 +19,9 @@ import { CODE_FORMAT } from './internal/constants';
 
 declare module 'doubter/core' {
   export interface Messages {
+    /**
+     * @default "Must be a MIME type"
+     */
     'string.format.mime': Message | Any;
   }
 

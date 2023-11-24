@@ -53,6 +53,9 @@ export interface FQDNOptions extends IssueOptions {
 
 declare module 'doubter/core' {
   export interface Messages {
+    /**
+     * @default "Must be a fully qualified domain name"
+     */
     'string.format.fqdn': Message | Any;
   }
 
@@ -70,7 +73,7 @@ declare module 'doubter/core' {
 }
 
 export default function enableFQDNFormat(ctor: typeof StringShape): void {
-  ctor.messages['string.format.fqdn'] = 'Must be an FQDN';
+  ctor.messages['string.format.fqdn'] = 'Must be a fully qualified domain name';
 
   ctor.prototype.fqdn = function (options) {
     const {

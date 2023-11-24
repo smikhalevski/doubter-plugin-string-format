@@ -77,6 +77,9 @@ export interface EmailOptions extends IssueOptions {
 
 declare module 'doubter/core' {
   export interface Messages {
+    /**
+     * @default "Must be an email"
+     */
     'string.format.email': Message | Any;
   }
 

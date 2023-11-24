@@ -17,6 +17,9 @@ import { CODE_FORMAT } from './internal/constants';
 
 declare module 'doubter/core' {
   export interface Messages {
+    /**
+     * @default "Must be an ASCII string"
+     */
     'string.format.ascii': Message | Any;
   }
 

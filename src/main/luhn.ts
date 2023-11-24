@@ -19,6 +19,9 @@ import { CODE_FORMAT } from './internal/constants';
 
 declare module 'doubter/core' {
   export interface Messages {
+    /**
+     * @default "Must be a Luhn number"
+     */
     'string.format.luhn': Message | Any;
   }
 
