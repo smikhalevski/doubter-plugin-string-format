@@ -1,6 +1,6 @@
 import * as d from 'doubter/core';
 import enableUUIDFormat from '../main/uuid';
-import { CODE_FORMAT } from '../main/internal/constants';
+import { CODE_FORMAT } from '../main/constants';
 
 enableUUIDFormat(d.StringShape);
 

@@ -16,7 +16,7 @@
 import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssueFactory } from 'doubter/utils';
 import isISIN from 'validator/lib/isISIN.js';
-import { CODE_FORMAT } from './internal/constants';
+import { CODE_FORMAT } from './constants';
 
 declare module 'doubter/core' {
   export interface Messages {

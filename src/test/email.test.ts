@@ -1,6 +1,6 @@
 import * as d from 'doubter/core';
 import enableEmailFormat from '../main/email';
-import { CODE_FORMAT } from '../main/internal/constants';
+import { CODE_FORMAT } from '../main/constants';
 
 enableEmailFormat(d.StringShape);
 

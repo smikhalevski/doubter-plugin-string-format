@@ -1,6 +1,6 @@
 import * as d from 'doubter/core';
 import enableIPFormat from '../main/ip';
-import { CODE_FORMAT } from '../main/internal/constants';
+import { CODE_FORMAT } from '../main/constants';
 
 enableIPFormat(d.StringShape);
 

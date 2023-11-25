@@ -1,6 +1,6 @@
 import * as d from 'doubter/core';
 import enableASCIIFormat from '../main/ascii';
-import { CODE_FORMAT } from '../main/internal/constants';
+import { CODE_FORMAT } from '../main/constants';
 
 enableASCIIFormat(d.StringShape);
 

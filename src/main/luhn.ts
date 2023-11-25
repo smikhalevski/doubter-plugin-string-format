@@ -15,7 +15,7 @@
 import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssueFactory } from 'doubter/utils';
 import isLuhnNumber from 'validator/lib/isLuhnNumber.js';
-import { CODE_FORMAT } from './internal/constants';
+import { CODE_FORMAT } from './constants';
 
 declare module 'doubter/core' {
   export interface Messages {

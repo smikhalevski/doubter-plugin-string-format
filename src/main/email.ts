@@ -14,7 +14,7 @@
 import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
 import isEmail from 'validator/lib/isEmail.js';
 import { createIssueFactory, extractOptions } from 'doubter/utils';
-import { CODE_FORMAT } from './internal/constants';
+import { CODE_FORMAT } from './constants';
 
 export interface EmailOptions extends IssueOptions {
   /**

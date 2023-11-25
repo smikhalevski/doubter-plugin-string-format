@@ -15,7 +15,7 @@
 import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssueFactory, extractOptions } from 'doubter/utils';
 import isIMEI from 'validator/lib/isIMEI.js';
-import { CODE_FORMAT } from './internal/constants';
+import { CODE_FORMAT } from './constants';
 
 export interface IMEIOptions extends IssueOptions {
   /**

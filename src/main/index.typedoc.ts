@@ -11,7 +11,7 @@
  * @module plugin-string-format
  */
 
-export * from './src/main';
+export * from './index';
 
 import { StringShape } from 'doubter/core';
 

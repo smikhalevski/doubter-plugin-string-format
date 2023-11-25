@@ -1,6 +1,6 @@
 import * as d from 'doubter/core';
 import enableIMEIFormat from '../main/imei';
-import { CODE_FORMAT } from '../main/internal/constants';
+import { CODE_FORMAT } from '../main/constants';
 
 enableIMEIFormat(d.StringShape);
 

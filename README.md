@@ -1,12 +1,23 @@
 # @doubter/plugin-string-format
 
-String format validation [plugin for Doubter.](https://github.com/smikhalevski/doubter)
+String format validation [plugin for Doubter](https://github.com/smikhalevski/doubter):
+
+- ASCII
+- BIC
+- email
+- fully qualified domain name
+- IMEI number
+- IP
+- ISIN
+- Luhn algorithm
+- MIME type
+- UUID
 
 ```shell
 npm install --save-prod doubter @doubter/plugin-string-format
 ```
 
-🔎 [Check out the API Docs.](https://smikhalevski.github.io/doubter-plugin-string-format)
+🔎 [Check out the API Docs](https://smikhalevski.github.io/doubter-plugin-string-format)
 
 # How to use?
 

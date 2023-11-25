@@ -1,6 +1,6 @@
 import * as d from 'doubter/core';
 import enableBICFormat from '../main/bic';
-import { CODE_FORMAT } from '../main/internal/constants';
+import { CODE_FORMAT } from '../main/constants';
 
 enableBICFormat(d.StringShape);
 

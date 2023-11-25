@@ -14,7 +14,7 @@
 
 import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssueFactory, extractOptions } from 'doubter/utils';
-import { CODE_FORMAT } from './internal/constants';
+import { CODE_FORMAT } from './constants';
 
 export interface UUIDOptions extends IssueOptions {
   version?: 1 | 2 | 3 | 4 | 5 | 'any';

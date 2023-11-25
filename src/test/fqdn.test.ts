@@ -1,6 +1,6 @@
 import * as d from 'doubter/core';
 import enableFQDNFormat from '../main/fqdn';
-import { CODE_FORMAT } from '../main/internal/constants';
+import { CODE_FORMAT } from '../main/constants';
 
 enableFQDNFormat(d.StringShape);
 

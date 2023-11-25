@@ -15,7 +15,7 @@
 import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssueFactory, extractOptions } from 'doubter/utils';
 import isFQDN from 'validator/lib/isFQDN.js';
-import { CODE_FORMAT } from './internal/constants';
+import { CODE_FORMAT } from './constants';
 
 export interface FQDNOptions extends IssueOptions {
   /**

@@ -14,7 +14,7 @@
 import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssueFactory, extractOptions } from 'doubter/utils';
 import isIP from 'validator/lib/isIP.js';
-import { CODE_FORMAT } from './internal/constants';
+import { CODE_FORMAT } from './constants';
 
 export interface IPOptions extends IssueOptions {
   version?: 4 | 6 | 'any';
