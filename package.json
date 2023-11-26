@@ -1,6 +1,6 @@
 {
   "name": "@doubter/plugin-string-format",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "String format validation plugin for Doubter.",
   "main": "./index.js",
   "module": "./index.mjs",
