@@ -16,7 +16,7 @@ describe('fqdn', () => {
         {
           code: CODE_FORMAT,
           input: 'foo',
-          message: 'Must be an FQDN',
+          message: 'Must be a fully qualified domain name',
           param: {
             format: 'fqdn',
             allowNumericTLD: false,

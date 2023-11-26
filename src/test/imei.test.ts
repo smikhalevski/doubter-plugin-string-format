@@ -16,7 +16,7 @@ describe('imei', () => {
         {
           code: CODE_FORMAT,
           input: 'foo',
-          message: 'Must be an IMEI',
+          message: 'Must be an IMEI number',
           param: {
             format: 'imei',
             allowHyphens: false,
