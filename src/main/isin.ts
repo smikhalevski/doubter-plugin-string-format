@@ -31,7 +31,7 @@ declare module 'doubter/core' {
      * Check if the string is an
      * [ISIN](https://en.wikipedia.org/wiki/International_Securities_Identification_Number) (stock/security identifier).
      *
-     * @param options The constraint options or an issue message.
+     * @param options The issue options or the issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
      * @plugin {@link plugin-string-format/isin! plugin-string-format/isin}

@@ -1,11 +1,11 @@
 # @doubter/plugin-string-format
 
-String format validation [plugin for Doubter](https://github.com/smikhalevski/doubter):
+String format validation [plugin for Doubter](https://github.com/smikhalevski/doubter).
 
 - ASCII
 - BIC
-- email
-- fully qualified domain name
+- Email
+- Fully qualified domain name
 - IMEI number
 - IP
 - ISIN

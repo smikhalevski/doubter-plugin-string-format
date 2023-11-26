@@ -63,7 +63,7 @@ declare module 'doubter/core' {
     /**
      * Check if the string is a fully qualified domain name (e.g. `domain.com`).
      *
-     * @param options The constraint options or an issue message.
+     * @param options The issue options or the issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
      * @plugin {@link plugin-string-format/fqdn! plugin-string-format/fqdn}

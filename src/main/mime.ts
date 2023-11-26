@@ -29,7 +29,7 @@ declare module 'doubter/core' {
     /**
      * Check if the string matches to a valid [MIME type](https://en.wikipedia.org/wiki/Media_type) format.
      *
-     * @param options The constraint options or an issue message.
+     * @param options The issue options or the issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
      * @plugin {@link plugin-string-format/mime! plugin-string-format/mime}

@@ -29,7 +29,7 @@ declare module 'doubter/core' {
     /**
      * Check if the string passes the [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm) check.
      *
-     * @param options The constraint options or an issue message.
+     * @param options The issue options or the issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
      * @plugin {@link plugin-string-format/luhn! plugin-string-format/luhn}

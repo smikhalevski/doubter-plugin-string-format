@@ -32,7 +32,7 @@ declare module 'doubter/core' {
     /**
      * Check if the string is an IP address.
      *
-     * @param options The constraint options or an issue message.
+     * @param options The issue options or the issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
      * @plugin {@link plugin-string-format/ip! plugin-string-format/ip}

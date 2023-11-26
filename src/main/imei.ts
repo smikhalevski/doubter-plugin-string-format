@@ -39,7 +39,7 @@ declare module 'doubter/core' {
      * Check if the string is a valid
      * [IMEI number](https://en.wikipedia.org/wiki/International_Mobile_Equipment_Identity).
      *
-     * @param options The constraint options or an issue message.
+     * @param options The issue options or the issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
      * @plugin {@link plugin-string-format/imei! plugin-string-format/imei}

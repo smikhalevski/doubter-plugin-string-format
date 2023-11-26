@@ -18,14 +18,14 @@ import { CODE_FORMAT } from './constants';
 
 export interface EmailOptions extends IssueOptions {
   /**
-   * If `true` then display names are allowed (ex. `Display Name <email-address>`).
+   * If `true` then display names are allowed (Display Name <email-address>).
    *
    * @default false
    */
   allowDisplayName?: boolean;
 
   /**
-   * If `true` then display names are required (ex. `Display Name <email-address>`).
+   * If `true` then display names are required (Display Name <email-address>).
    *
    * @default false
    */
@@ -87,7 +87,7 @@ declare module 'doubter/core' {
     /**
      * Check if the string is an email.
      *
-     * @param options The constraint options or an issue message.
+     * @param options The issue options or the issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
      * @plugin {@link plugin-string-format/email! plugin-string-format/email}
