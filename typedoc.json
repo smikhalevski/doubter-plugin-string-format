@@ -10,14 +10,17 @@
   "tsconfig": "./tsconfig.json",
   "customCss": "./node_modules/typedoc-custom-css/custom.css",
   "entryPoints": [
-    "./typedoc.index.ts",
-    "./src/main/luhn.ts",
-    "./src/main/mime.ts",
-    "./src/main/imei.ts",
+    "./src/main/index.typedoc.ts",
+    "./src/main/ascii.ts",
+    "./src/main/bic.ts",
     "./src/main/email.ts",
     "./src/main/fqdn.ts",
+    "./src/main/imei.ts",
+    "./src/main/ip.ts",
     "./src/main/isin.ts",
-    "./src/main/bic.ts"
+    "./src/main/luhn.ts",
+    "./src/main/mime.ts",
+    "./src/main/uuid.ts"
   ],
   "externalSymbolLinkMappings": {
     "doubter": {

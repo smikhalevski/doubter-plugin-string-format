@@ -11,6 +11,11 @@
       "import": "./index.mjs",
       "require": "./index.js"
     },
+    "./ascii": {
+      "types": "./ascii.d.ts",
+      "import": "./ascii.mjs",
+      "require": "./ascii.js"
+    },
     "./bic": {
       "types": "./bic.d.ts",
       "import": "./bic.mjs",
@@ -31,6 +36,11 @@
       "import": "./imei.mjs",
       "require": "./imei.js"
     },
+    "./ip": {
+      "types": "./ip.d.ts",
+      "import": "./ip.mjs",
+      "require": "./ip.js"
+    },
     "./isin": {
       "types": "./isin.d.ts",
       "import": "./isin.mjs",
@@ -46,13 +56,19 @@
       "import": "./mime.mjs",
       "require": "./mime.js"
     },
+    "./uuid": {
+      "types": "./uuid.d.ts",
+      "import": "./uuid.mjs",
+      "require": "./uuid.js"
+    },
     "./package.json": "./package.json"
   },
   "sideEffects": false,
   "scripts": {
-    "build": "tsc --project tsconfig.build.json && rollup --config && cp package.json README.md LICENSE.txt lib/ && cd lib && npm pkg delete scripts devDependencies",
-    "clean": "rimraf gen lib docs coverage",
+    "build": "rollup --config && cp package.json README.md LICENSE.txt lib/ && cd lib && npm pkg delete scripts devDependencies",
+    "clean": "rimraf lib docs coverage",
     "test": "jest",
+    "perf": "toofast",
     "docs": "typedoc"
   },
   "repository": {
@@ -63,13 +79,16 @@
     "doubter",
     "plugin",
     "string",
+    "format",
     "bic",
     "email",
     "fqdn",
     "imei",
+    "ip",
     "isin",
     "luhn",
-    "mime"
+    "mime",
+    "uuid"
   ],
   "author": "Savva Mikhalevski <smikhalevski@gmail.com>",
   "license": "MIT",
@@ -78,21 +97,20 @@
   },
   "homepage": "https://github.com/smikhalevski/doubter-plugin-string-format#readme",
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^15.2.1",
-    "@types/jest": "^29.5.5",
+    "@rollup/plugin-typescript": "^11.1.5",
+    "@types/jest": "^29.5.10",
     "jest": "^29.7.0",
-    "prettier": "^3.0.3",
-    "rimraf": "^5.0.1",
-    "rollup": "^3.27.0",
-    "rollup-plugin-dts": "^6.0.2",
+    "prettier": "^3.1.0",
+    "rimraf": "^5.0.5",
+    "rollup": "^4.5.2",
     "ts-jest": "^29.1.1",
     "tslib": "^2.6.2",
-    "typedoc": "^0.25.1",
+    "typedoc": "^0.25.3",
     "typedoc-custom-css": "github:smikhalevski/typedoc-custom-css#master",
     "typescript": "^5.2.2"
   },
   "peerDependencies": {
-    "doubter": "^3.0.0",
+    "doubter": "^4.0.0",
     "validator": "^13.11.0"
   }
 }

@@ -5,13 +5,13 @@
  * import { StringShape } from 'doubter/core';
  * import enableStringFormat from '@doubter/plugin-string-format';
  *
- * enableStringFormat(StringShape.prototype);
+ * enableStringFormat(StringShape);
  * ```
  *
  * @module plugin-string-format
  */
 
-export * from './src/main';
+export * from './index';
 
 import { StringShape } from 'doubter/core';
 
@@ -19,6 +19,7 @@ import { StringShape } from 'doubter/core';
  * This a slice from {@link doubter!StringShape doubter/core/StringShape} that contains only methods added by this
  * plugin.
  */
-interface StringShape_ extends Pick<StringShape, 'bic' | 'email' | 'fqdn' | 'imei' | 'isin' | 'luhn' | 'mime'> {}
+interface StringShape_
+  extends Pick<StringShape, 'ascii' | 'bic' | 'email' | 'fqdn' | 'imei' | 'isin' | 'luhn' | 'mime' | 'uuid'> {}
 
 export { StringShape_ as StringShape };

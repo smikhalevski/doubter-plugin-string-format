@@ -5,27 +5,27 @@
  * import { StringShape } from 'doubter/core';
  * import enableEmailFormat from '@doubter/plugin-string-format/email';
  *
- * enableEmailFormat(StringShape.prototype);
+ * enableEmailFormat(StringShape);
  * ```
  *
  * @module plugin-string-format/email
  */
 
-import { IssueOptions, Message, StringShape } from 'doubter/core';
+import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
 import isEmail from 'validator/lib/isEmail.js';
 import { createIssueFactory, extractOptions } from 'doubter/utils';
-import { CODE_FORMAT, FORMAT_EMAIL, MESSAGE_EMAIL } from './internal/constants';
+import { CODE_FORMAT } from './constants';
 
 export interface EmailOptions extends IssueOptions {
   /**
-   * If `true` then display names are allowed (ex. `Display Name <email-address>`).
+   * If `true` then display names are allowed (Display Name <email-address>).
    *
    * @default false
    */
   allowDisplayName?: boolean;
 
   /**
-   * If `true` then display names are required (ex. `Display Name <email-address>`).
+   * If `true` then display names are required (Display Name <email-address>).
    *
    * @default false
    */
@@ -76,11 +76,18 @@ export interface EmailOptions extends IssueOptions {
 }
 
 declare module 'doubter/core' {
+  export interface Messages {
+    /**
+     * @default "Must be an email"
+     */
+    'string.format.email': Message | Any;
+  }
+
   interface StringShape {
     /**
      * Check if the string is an email.
      *
-     * @param options The constraint options or an issue message.
+     * @param options The issue options or the issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
      * @plugin {@link plugin-string-format/email! plugin-string-format/email}
@@ -89,8 +96,10 @@ declare module 'doubter/core' {
   }
 }
 
-export default function enableEmailFormat(prototype: StringShape): void {
-  prototype.email = function (options) {
+export default function enableEmailFormat(ctor: typeof StringShape): void {
+  ctor.messages['string.format.email'] = 'Must be an email';
+
+  ctor.prototype.email = function (options) {
     const {
       requireDisplayName = false,
       allowDisplayName = false,
@@ -104,7 +113,7 @@ export default function enableEmailFormat(prototype: StringShape): void {
     } = extractOptions(options);
 
     const param = {
-      format: FORMAT_EMAIL,
+      format: 'email',
       requireDisplayName,
       allowDisplayName,
       allowIPDomain,
@@ -128,18 +137,14 @@ export default function enableEmailFormat(prototype: StringShape): void {
       blacklisted_chars: blacklistedChars,
     };
 
-    const issueFactory = createIssueFactory(CODE_FORMAT, MESSAGE_EMAIL, options, param);
+    const issueFactory = createIssueFactory(CODE_FORMAT, ctor.messages['string.format.email'], options, param);
 
-    return this.use(
-      next => (input, output, options, issues) => {
-        if (!isEmail(input, emailOptions)) {
-          (issues ||= []).push(issueFactory(output, options));
-
-          if (options.earlyReturn) {
-            return issues;
-          }
+    return this.addOperation(
+      (value, param, options) => {
+        if (isEmail(value, emailOptions)) {
+          return null;
         }
-        return next(input, output, options, issues);
+        return [issueFactory(value, options)];
       },
       { type: CODE_FORMAT, param }
     );

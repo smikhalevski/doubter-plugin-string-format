@@ -1,12 +1,23 @@
 # @doubter/plugin-string-format
 
-String format validation [plugin for Doubter.](https://github.com/smikhalevski/doubter)
+String format validation [plugin for Doubter](https://github.com/smikhalevski/doubter).
+
+- ASCII
+- BIC
+- Email
+- Fully qualified domain name
+- IMEI number
+- IP
+- ISIN
+- Luhn algorithm
+- MIME type
+- UUID
 
 ```shell
 npm install --save-prod doubter @doubter/plugin-string-format
 ```
 
-🔎 [Check out the API Docs.](https://smikhalevski.github.io/doubter-plugin-string-format)
+🔎 [Check out the API Docs](https://smikhalevski.github.io/doubter-plugin-string-format)
 
 # How to use?
 
@@ -16,7 +27,7 @@ Import and enable the plugin:
 import * as d from 'doubter';
 import enableStringFormat from '@doubter/plugin-string-format';
 
-enableStringFormat(d.StringShape.prototype);
+enableStringFormat(d.StringShape);
 
 const emailShape = d.string().email();
 
@@ -34,7 +45,7 @@ import * as d from 'doubter';
 // 🟡 Import a single format module
 import enableBICFormat from '@doubter/plugin-string-format/bic';
 
-enableBICFormat(d.StringShape.prototype);
+enableBICFormat(d.StringShape);
 
 const bicShape = d.string().bic();
 
@@ -81,3 +92,24 @@ The code above would return an `Err` result:
 ```
 
 Use `.issues[].param.format` to detect the exact format that was violated.
+
+# Localization
+
+The default issue messages used by this plugin can be globally configured through
+[`d.Shape.message`](https://smikhalevski.github.io/doubter/latest/classes/core.Shape.html#messages):
+
+```ts
+d.Shape.message['string.format.email'] = 'Invalid email';
+
+const emailShape = d.string().email();
+
+emailShape.parse('foo');
+// ❌ ValidationError: string.format at /: Invalid email
+```
+
+Or pass a message directly to a plugin method:
+
+```ts
+d.string().email('Not an email').parse('foo');
+// ❌ ValidationError: string.format at /: Not an email
+```

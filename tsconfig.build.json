@@ -1,6 +1,12 @@
 {
   "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./src/main"
+  },
   "include": [
     "./src/main/**/*"
+  ],
+  "exclude": [
+    "./src/main/index.typedoc.ts"
   ]
 }

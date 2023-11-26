@@ -6,23 +6,30 @@
  * import { StringShape } from 'doubter/core';
  * import enableBICFormat from '@doubter/plugin-string-format/bic';
  *
- * enableBICFormat(StringShape.prototype);
+ * enableBICFormat(StringShape);
  * ```
  *
  * @module plugin-string-format/bic
  */
 
-import { IssueOptions, Message, StringShape } from 'doubter/core';
+import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssueFactory } from 'doubter/utils';
 import isBIC from 'validator/lib/isBIC.js';
-import { CODE_FORMAT, FORMAT_BIC, MESSAGE_BIC } from './internal/constants';
+import { CODE_FORMAT } from './constants';
 
 declare module 'doubter/core' {
+  export interface Messages {
+    /**
+     * @default "Must be a BIC or SWIFT code"
+     */
+    'string.format.bic': Message | Any;
+  }
+
   interface StringShape {
     /**
      * Check if the string is a BIC (Bank Identification Code) or SWIFT code.
      *
-     * @param options The constraint options or an issue message.
+     * @param options The issue options or the issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
      * @plugin {@link plugin-string-format/bic! plugin-string-format/bic}
@@ -31,22 +38,20 @@ declare module 'doubter/core' {
   }
 }
 
-export default function enableBICFormat(prototype: StringShape): void {
-  prototype.bic = function (options) {
-    const param = { format: FORMAT_BIC };
+export default function enableBICFormat(ctor: typeof StringShape): void {
+  ctor.messages['string.format.bic'] = 'Must be a BIC or SWIFT code';
 
-    const issueFactory = createIssueFactory(CODE_FORMAT, MESSAGE_BIC, options, param);
+  ctor.prototype.bic = function (options) {
+    const param = { format: 'bic' };
 
-    return this.use(
-      next => (input, output, options, issues) => {
-        if (!isBIC(input)) {
-          (issues ||= []).push(issueFactory(output, options));
+    const issueFactory = createIssueFactory(CODE_FORMAT, ctor.messages['string.format.bic'], options, param);
 
-          if (options.earlyReturn) {
-            return issues;
-          }
+    return this.addOperation(
+      (value, param, options) => {
+        if (isBIC(value)) {
+          return null;
         }
-        return next(input, output, options, issues);
+        return [issueFactory(value, options)];
       },
       { type: CODE_FORMAT, param }
     );

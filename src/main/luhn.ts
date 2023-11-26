@@ -6,23 +6,30 @@
  * import { StringShape } from 'doubter/core';
  * import enableLuhnFormat from '@doubter/plugin-string-format/luhn';
  *
- * enableLuhnFormat(StringShape.prototype);
+ * enableLuhnFormat(StringShape);
  * ```
  *
  * @module plugin-string-format/luhn
  */
 
-import { IssueOptions, Message, StringShape } from 'doubter/core';
+import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssueFactory } from 'doubter/utils';
 import isLuhnNumber from 'validator/lib/isLuhnNumber.js';
-import { CODE_FORMAT, FORMAT_LUHN, MESSAGE_LUHN } from './internal/constants';
+import { CODE_FORMAT } from './constants';
 
 declare module 'doubter/core' {
+  export interface Messages {
+    /**
+     * @default "Must be a Luhn number"
+     */
+    'string.format.luhn': Message | Any;
+  }
+
   interface StringShape {
     /**
      * Check if the string passes the [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm) check.
      *
-     * @param options The constraint options or an issue message.
+     * @param options The issue options or the issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
      * @plugin {@link plugin-string-format/luhn! plugin-string-format/luhn}
@@ -31,22 +38,20 @@ declare module 'doubter/core' {
   }
 }
 
-export default function enableLuhnFormat(prototype: StringShape): void {
-  prototype.luhn = function (options) {
-    const param = { format: FORMAT_LUHN };
+export default function enableLuhnFormat(ctor: typeof StringShape): void {
+  ctor.messages['string.format.luhn'] = 'Must be a Luhn number';
 
-    const issueFactory = createIssueFactory(CODE_FORMAT, MESSAGE_LUHN, options, param);
+  ctor.prototype.luhn = function (options) {
+    const param = { format: 'luhn' };
 
-    return this.use(
-      next => (input, output, options, issues) => {
-        if (!isLuhnNumber(input)) {
-          (issues ||= []).push(issueFactory(output, options));
+    const issueFactory = createIssueFactory(CODE_FORMAT, ctor.messages['string.format.luhn'], options, param);
 
-          if (options.earlyReturn) {
-            return issues;
-          }
+    return this.addOperation(
+      (value, param, options) => {
+        if (isLuhnNumber(value)) {
+          return null;
         }
-        return next(input, output, options, issues);
+        return [issueFactory(value, options)];
       },
       { type: CODE_FORMAT, param }
     );
