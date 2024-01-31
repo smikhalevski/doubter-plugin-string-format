@@ -96,10 +96,10 @@ Use `.issues[].param.format` to detect the exact format that was violated.
 # Localization
 
 The default issue messages used by this plugin can be globally configured through
-[`d.Shape.message`](https://smikhalevski.github.io/doubter/latest/classes/core.Shape.html#messages):
+[`d.Shape.messages`](https://smikhalevski.github.io/doubter/latest/classes/core.Shape.html#messages):
 
 ```ts
-d.Shape.message['string.format.email'] = 'Invalid email';
+d.Shape.messages['string.format.email'] = 'Invalid email';
 
 const emailShape = d.string().email();
 
