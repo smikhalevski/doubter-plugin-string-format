@@ -9,11 +9,11 @@
  * enableIMEIFormat(StringShape);
  * ```
  *
- * @module plugin-string-format/imei
+ * @module imei
  */
 
-import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
-import { createIssueFactory, extractOptions } from 'doubter/utils';
+import { IssueOptions, Message, StringShape } from 'doubter/core';
+import { createIssue, toIssueOptions } from 'doubter/utils';
 import isIMEI from 'validator/lib/isIMEI.js';
 import { CODE_FORMAT } from './constants';
 
@@ -27,13 +27,6 @@ export interface IMEIOptions extends IssueOptions {
 }
 
 declare module 'doubter/core' {
-  export interface Messages {
-    /**
-     * @default "Must be an IMEI number"
-     */
-    'string.format.imei': Message | Any;
-  }
-
   interface StringShape {
     /**
      * Check if the string is a valid
@@ -42,30 +35,26 @@ declare module 'doubter/core' {
      * @param options The issue options or the issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
-     * @plugin {@link plugin-string-format/imei! plugin-string-format/imei}
+     * @plugin {@link imei! plugin-string-format/imei}
      */
     imei(options?: IMEIOptions | Message): this;
   }
 }
 
 export default function enableIMEIFormat(ctor: typeof StringShape): void {
-  ctor.messages['string.format.imei'] = 'Must be an IMEI number';
-
-  ctor.prototype.imei = function (options) {
-    const { allowHyphens = false } = extractOptions(options);
+  ctor.prototype.imei = function (issueOptions) {
+    const { allowHyphens = false } = toIssueOptions(issueOptions);
 
     const param = { format: 'imei', allowHyphens };
 
     const imeiOptions = { allow_hyphens: allowHyphens };
-
-    const issueFactory = createIssueFactory(CODE_FORMAT, ctor.messages['string.format.imei'], options, param);
 
     return this.addOperation(
       (value, param, options) => {
         if (isIMEI(value, imeiOptions)) {
           return null;
         }
-        return [issueFactory(value, options)];
+        return [createIssue(CODE_FORMAT, value, 'Must be an IMEI number', param, options, issueOptions)];
       },
       { type: CODE_FORMAT, param }
     );

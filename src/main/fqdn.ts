@@ -9,11 +9,11 @@
  * enableFQDNFormat(StringShape);
  * ```
  *
- * @module plugin-string-format/fqdn
+ * @module fqdn
  */
 
-import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
-import { createIssueFactory, extractOptions } from 'doubter/utils';
+import { IssueOptions, Message, StringShape } from 'doubter/core';
+import { createIssue, toIssueOptions } from 'doubter/utils';
 import isFQDN from 'validator/lib/isFQDN.js';
 import { CODE_FORMAT } from './constants';
 
@@ -52,13 +52,6 @@ export interface FQDNOptions extends IssueOptions {
 }
 
 declare module 'doubter/core' {
-  export interface Messages {
-    /**
-     * @default "Must be a fully qualified domain name"
-     */
-    'string.format.fqdn': Message | Any;
-  }
-
   interface StringShape {
     /**
      * Check if the string is a fully qualified domain name (e.g. `domain.com`).
@@ -66,16 +59,14 @@ declare module 'doubter/core' {
      * @param options The issue options or the issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
-     * @plugin {@link plugin-string-format/fqdn! plugin-string-format/fqdn}
+     * @plugin {@link fqdn! plugin-string-format/fqdn}
      */
     fqdn(options?: FQDNOptions | Message): this;
   }
 }
 
 export default function enableFQDNFormat(ctor: typeof StringShape): void {
-  ctor.messages['string.format.fqdn'] = 'Must be a fully qualified domain name';
-
-  ctor.prototype.fqdn = function (options) {
+  ctor.prototype.fqdn = function (issueOptions) {
     const {
       requireTLD = true,
       allowUnderscores = false,
@@ -83,7 +74,7 @@ export default function enableFQDNFormat(ctor: typeof StringShape): void {
       allowNumericTLD = false,
       allowWildcard = false,
       ignoreMaxLength = false,
-    } = extractOptions(options);
+    } = toIssueOptions(issueOptions);
 
     const param = {
       format: 'fqdn',
@@ -104,14 +95,12 @@ export default function enableFQDNFormat(ctor: typeof StringShape): void {
       ignore_max_length: ignoreMaxLength,
     };
 
-    const issueFactory = createIssueFactory(CODE_FORMAT, ctor.messages['string.format.fqdn'], options, param);
-
     return this.addOperation(
       (value, param, options) => {
         if (isFQDN(value, fqdnOptions)) {
           return null;
         }
-        return [issueFactory(value, options)];
+        return [createIssue(CODE_FORMAT, value, 'Must be a fully qualified domain name', param, options, issueOptions)];
       },
       { type: CODE_FORMAT, param }
     );

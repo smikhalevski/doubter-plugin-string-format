@@ -1,5 +1,5 @@
 declare module 'validator/*' {
-  const defaultExport: any;
+  const _default: any;
 
-  export default defaultExport;
+  export default _default;
 }

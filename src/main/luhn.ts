@@ -9,22 +9,15 @@
  * enableLuhnFormat(StringShape);
  * ```
  *
- * @module plugin-string-format/luhn
+ * @module luhn
  */
 
-import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
-import { createIssueFactory } from 'doubter/utils';
+import { IssueOptions, Message, StringShape } from 'doubter/core';
+import { createIssue } from 'doubter/utils';
 import isLuhnNumber from 'validator/lib/isLuhnNumber.js';
 import { CODE_FORMAT } from './constants';
 
 declare module 'doubter/core' {
-  export interface Messages {
-    /**
-     * @default "Must be a Luhn number"
-     */
-    'string.format.luhn': Message | Any;
-  }
-
   interface StringShape {
     /**
      * Check if the string passes the [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm) check.
@@ -32,28 +25,22 @@ declare module 'doubter/core' {
      * @param options The issue options or the issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
-     * @plugin {@link plugin-string-format/luhn! plugin-string-format/luhn}
+     * @plugin {@link luhn! plugin-string-format/luhn}
      */
     luhn(options?: IssueOptions | Message): this;
   }
 }
 
 export default function enableLuhnFormat(ctor: typeof StringShape): void {
-  ctor.messages['string.format.luhn'] = 'Must be a Luhn number';
-
-  ctor.prototype.luhn = function (options) {
-    const param = { format: 'luhn' };
-
-    const issueFactory = createIssueFactory(CODE_FORMAT, ctor.messages['string.format.luhn'], options, param);
-
+  ctor.prototype.luhn = function (issueOptions) {
     return this.addOperation(
       (value, param, options) => {
         if (isLuhnNumber(value)) {
           return null;
         }
-        return [issueFactory(value, options)];
+        return [createIssue(CODE_FORMAT, value, 'Must be a Luhn number', param, options, issueOptions)];
       },
-      { type: CODE_FORMAT, param }
+      { type: CODE_FORMAT, param: { format: 'luhn' } }
     );
   };
 }

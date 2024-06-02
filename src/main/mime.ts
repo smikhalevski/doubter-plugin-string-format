@@ -9,11 +9,11 @@
  * enableMIMEFormat(StringShape);
  * ```
  *
- * @module plugin-string-format/mime
+ * @module mime
  */
 
 import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
-import { createIssueFactory } from 'doubter/utils';
+import { createIssue } from 'doubter/utils';
 import isMimeType from 'validator/lib/isMimeType.js';
 import { CODE_FORMAT } from './constants';
 
@@ -32,28 +32,22 @@ declare module 'doubter/core' {
      * @param options The issue options or the issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
-     * @plugin {@link plugin-string-format/mime! plugin-string-format/mime}
+     * @plugin {@link mime! plugin-string-format/mime}
      */
     mime(options?: IssueOptions | Message): this;
   }
 }
 
 export default function enableMIMEFormat(ctor: typeof StringShape): void {
-  ctor.messages['string.format.mime'] = 'Must be a MIME type';
-
-  ctor.prototype.mime = function (options) {
-    const param = { format: 'mime' };
-
-    const issueFactory = createIssueFactory(CODE_FORMAT, ctor.messages['string.format.mime'], options, param);
-
+  ctor.prototype.mime = function (issueOptions) {
     return this.addOperation(
       (value, param, options) => {
         if (isMimeType(value)) {
           return null;
         }
-        return [issueFactory(value, options)];
+        return [createIssue(CODE_FORMAT, value, 'Must be a MIME type', param, options, issueOptions)];
       },
-      { type: CODE_FORMAT, param }
+      { type: CODE_FORMAT, param: { format: 'mime' } }
     );
   };
 }

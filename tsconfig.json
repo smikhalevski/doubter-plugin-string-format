@@ -2,6 +2,7 @@
   "compilerOptions": {
     "declaration": true,
     "moduleResolution": "Node",
+    "esModuleInterop": true,
     "isolatedModules": true,
     "noUnusedLocals": true,
     "strict": true,

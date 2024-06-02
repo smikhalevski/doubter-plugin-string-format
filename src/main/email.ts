@@ -8,12 +8,12 @@
  * enableEmailFormat(StringShape);
  * ```
  *
- * @module plugin-string-format/email
+ * @module email
  */
 
-import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
+import { IssueOptions, Message, StringShape } from 'doubter/core';
+import { createIssue, toIssueOptions } from 'doubter/utils';
 import isEmail from 'validator/lib/isEmail.js';
-import { createIssueFactory, extractOptions } from 'doubter/utils';
 import { CODE_FORMAT } from './constants';
 
 export interface EmailOptions extends IssueOptions {
@@ -76,13 +76,6 @@ export interface EmailOptions extends IssueOptions {
 }
 
 declare module 'doubter/core' {
-  export interface Messages {
-    /**
-     * @default "Must be an email"
-     */
-    'string.format.email': Message | Any;
-  }
-
   interface StringShape {
     /**
      * Check if the string is an email.
@@ -90,16 +83,14 @@ declare module 'doubter/core' {
      * @param options The issue options or the issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
-     * @plugin {@link plugin-string-format/email! plugin-string-format/email}
+     * @plugin {@link email! plugin-string-format/email}
      */
     email(options?: EmailOptions | Message): this;
   }
 }
 
 export default function enableEmailFormat(ctor: typeof StringShape): void {
-  ctor.messages['string.format.email'] = 'Must be an email';
-
-  ctor.prototype.email = function (options) {
+  ctor.prototype.email = function (issueOptions) {
     const {
       requireDisplayName = false,
       allowDisplayName = false,
@@ -110,7 +101,7 @@ export default function enableEmailFormat(ctor: typeof StringShape): void {
       hostWhitelist = [],
       requireTLD = true,
       blacklistedChars = '',
-    } = extractOptions(options);
+    } = toIssueOptions(issueOptions);
 
     const param = {
       format: 'email',
@@ -137,14 +128,12 @@ export default function enableEmailFormat(ctor: typeof StringShape): void {
       blacklisted_chars: blacklistedChars,
     };
 
-    const issueFactory = createIssueFactory(CODE_FORMAT, ctor.messages['string.format.email'], options, param);
-
     return this.addOperation(
       (value, param, options) => {
         if (isEmail(value, emailOptions)) {
           return null;
         }
-        return [issueFactory(value, options)];
+        return [createIssue(CODE_FORMAT, value, 'Must be an email', param, options, issueOptions)];
       },
       { type: CODE_FORMAT, param }
     );

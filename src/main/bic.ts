@@ -9,22 +9,15 @@
  * enableBICFormat(StringShape);
  * ```
  *
- * @module plugin-string-format/bic
+ * @module bic
  */
 
-import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
-import { createIssueFactory } from 'doubter/utils';
+import { IssueOptions, Message, StringShape } from 'doubter/core';
+import { createIssue } from 'doubter/utils';
 import isBIC from 'validator/lib/isBIC.js';
 import { CODE_FORMAT } from './constants';
 
 declare module 'doubter/core' {
-  export interface Messages {
-    /**
-     * @default "Must be a BIC or SWIFT code"
-     */
-    'string.format.bic': Message | Any;
-  }
-
   interface StringShape {
     /**
      * Check if the string is a BIC (Bank Identification Code) or SWIFT code.
@@ -32,28 +25,22 @@ declare module 'doubter/core' {
      * @param options The issue options or the issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
-     * @plugin {@link plugin-string-format/bic! plugin-string-format/bic}
+     * @plugin {@link bic! plugin-string-format/bic}
      */
     bic(options?: IssueOptions | Message): this;
   }
 }
 
 export default function enableBICFormat(ctor: typeof StringShape): void {
-  ctor.messages['string.format.bic'] = 'Must be a BIC or SWIFT code';
-
-  ctor.prototype.bic = function (options) {
-    const param = { format: 'bic' };
-
-    const issueFactory = createIssueFactory(CODE_FORMAT, ctor.messages['string.format.bic'], options, param);
-
+  ctor.prototype.bic = function (issueOptions) {
     return this.addOperation(
       (value, param, options) => {
         if (isBIC(value)) {
           return null;
         }
-        return [issueFactory(value, options)];
+        return [createIssue(CODE_FORMAT, value, 'Must be a BIC or SWIFT code', param, options, issueOptions)];
       },
-      { type: CODE_FORMAT, param }
+      { type: CODE_FORMAT, param: { format: 'bic' } }
     );
   };
 }

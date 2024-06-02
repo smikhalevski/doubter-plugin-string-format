@@ -10,22 +10,15 @@
  * enableISINFormat(StringShape);
  * ```
  *
- * @module plugin-string-format/isin
+ * @module isin
  */
 
-import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
-import { createIssueFactory } from 'doubter/utils';
+import { IssueOptions, Message, StringShape } from 'doubter/core';
+import { createIssue } from 'doubter/utils';
 import isISIN from 'validator/lib/isISIN.js';
 import { CODE_FORMAT } from './constants';
 
 declare module 'doubter/core' {
-  export interface Messages {
-    /**
-     * @default "Must be an ISIN"
-     */
-    'string.format.isin': Message | Any;
-  }
-
   interface StringShape {
     /**
      * Check if the string is an
@@ -34,28 +27,22 @@ declare module 'doubter/core' {
      * @param options The issue options or the issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
-     * @plugin {@link plugin-string-format/isin! plugin-string-format/isin}
+     * @plugin {@link isin! plugin-string-format/isin}
      */
     isin(options?: IssueOptions | Message): this;
   }
 }
 
 export default function enableISINFormat(ctor: typeof StringShape): void {
-  ctor.messages['string.format.isin'] = 'Must be an ISIN';
-
-  ctor.prototype.isin = function (options) {
-    const param = { format: 'isin' };
-
-    const issueFactory = createIssueFactory(CODE_FORMAT, ctor.messages['string.format.isin'], options, param);
-
+  ctor.prototype.isin = function (issueOptions) {
     return this.addOperation(
       (value, param, options) => {
         if (isISIN(value)) {
           return null;
         }
-        return [issueFactory(value, options)];
+        return [createIssue(CODE_FORMAT, value, 'Must be an ISIN', param, options, issueOptions)];
       },
-      { type: CODE_FORMAT, param }
+      { type: CODE_FORMAT, param: { format: 'isin' } }
     );
   };
 }

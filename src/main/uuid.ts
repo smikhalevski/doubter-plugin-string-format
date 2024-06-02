@@ -9,11 +9,11 @@
  * enableUUIDFormat(StringShape);
  * ```
  *
- * @module plugin-string-format/uuid
+ * @module uuid
  */
 
 import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
-import { createIssueFactory, extractOptions } from 'doubter/utils';
+import { createIssue, toIssueOptions } from 'doubter/utils';
 import { CODE_FORMAT } from './constants';
 
 export interface UUIDOptions extends IssueOptions {
@@ -35,7 +35,7 @@ declare module 'doubter/core' {
      * @param options The issue options or the issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
-     * @plugin {@link plugin-string-format/uuid! plugin-string-format/uuid}
+     * @plugin {@link uuid! plugin-string-format/uuid}
      */
     uuid(options?: UUIDOptions | Message): this;
   }
@@ -51,22 +51,18 @@ const reMap = {
 };
 
 export default function enableUUIDFormat(ctor: typeof StringShape): void {
-  ctor.messages['string.format.uuid'] = 'Must be a UUID';
-
-  ctor.prototype.uuid = function (options) {
-    const { version = 'any' } = extractOptions(options);
+  ctor.prototype.uuid = function (issueOptions) {
+    const { version = 'any' } = toIssueOptions(issueOptions);
 
     const re = reMap[version];
     const param = { format: 'uuid', version };
-
-    const issueFactory = createIssueFactory(CODE_FORMAT, ctor.messages['string.format.uuid'], options, param);
 
     return this.addOperation(
       (value, param, options) => {
         if (re !== undefined && re.test(value)) {
           return null;
         }
-        return [issueFactory(value, options)];
+        return [createIssue(CODE_FORMAT, value, 'Must be a UUID', param, options, issueOptions)];
       },
       { type: CODE_FORMAT, param }
     );

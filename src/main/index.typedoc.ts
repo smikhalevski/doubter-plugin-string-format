@@ -16,10 +16,10 @@ export * from './index';
 import { StringShape } from 'doubter/core';
 
 /**
- * This a slice from {@link doubter!StringShape doubter/core/StringShape} that contains only methods added by this
- * plugin.
+ * This a slice from {@link doubter!StringShape doubter/core/StringShape} that contains only methods added by through
+ * this package.
  */
 interface StringShape_
   extends Pick<StringShape, 'ascii' | 'bic' | 'email' | 'fqdn' | 'imei' | 'isin' | 'luhn' | 'mime' | 'uuid'> {}
 
-export { StringShape_ as StringShape };
+export type { StringShape_ as StringShape };
