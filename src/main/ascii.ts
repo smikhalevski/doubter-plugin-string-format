@@ -1,5 +1,5 @@
 /**
- * The plugin that enhances {@link plugin-string-format!StringShape StringShape} with the ASCII check.
+ * The plugin that enhances {@link index!StringShape StringShape} with the ASCII check.
  *
  * ```ts
  * import { StringShape } from 'doubter/core';
@@ -8,21 +8,14 @@
  * enableASCIIFormat(StringShape);
  * ```
  *
- * @module plugin-string-format/ascii
+ * @module ascii
  */
 
-import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
-import { createIssueFactory } from 'doubter/utils';
-import { CODE_FORMAT } from './constants';
+import { IssueOptions, Message, StringShape } from 'doubter/core';
+import { createIssue } from 'doubter/utils';
+import { CODE_ASCII, MESSAGE_ASCII } from './constants';
 
 declare module 'doubter/core' {
-  export interface Messages {
-    /**
-     * @default "Must be an ASCII string"
-     */
-    'string.format.ascii': Message | Any;
-  }
-
   interface StringShape {
     /**
      * Check if the string is an ASCII string.
@@ -30,30 +23,24 @@ declare module 'doubter/core' {
      * @param options The issue options or the issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
-     * @plugin {@link plugin-string-format/ascii! plugin-string-format/ascii}
+     * @plugin {@link ascii! plugin-string-format/ascii}
      */
     ascii(options?: IssueOptions | Message): this;
   }
 }
 
-const re = /^[\x00-\x7F]+$/;
+const pattern = /^[\x00-\x7F]+$/;
 
 export default function enableASCIIFormat(ctor: typeof StringShape): void {
-  ctor.messages['string.format.ascii'] = 'Must be an ASCII string';
-
-  ctor.prototype.ascii = function (options) {
-    const param = { format: 'ascii' };
-
-    const issueFactory = createIssueFactory(CODE_FORMAT, ctor.messages['string.format.ascii'], options, param);
-
+  ctor.prototype.ascii = function (issueOptions) {
     return this.addOperation(
       (value, param, options) => {
-        if (re.test(value)) {
+        if (pattern.test(value)) {
           return null;
         }
-        return [issueFactory(value, options)];
+        return [createIssue(CODE_ASCII, value, MESSAGE_ASCII, param, options, issueOptions)];
       },
-      { type: CODE_FORMAT, param }
+      { type: CODE_ASCII }
     );
   };
 }

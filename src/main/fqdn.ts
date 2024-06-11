@@ -1,5 +1,5 @@
 /**
- * The plugin that enhances {@link plugin-string-format!StringShape StringShape} with the fully qualified domain name
+ * The plugin that enhances {@link index!StringShape StringShape} with the fully qualified domain name
  * check.
  *
  * ```ts
@@ -9,13 +9,13 @@
  * enableFQDNFormat(StringShape);
  * ```
  *
- * @module plugin-string-format/fqdn
+ * @module fqdn
  */
 
-import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
-import { createIssueFactory, extractOptions } from 'doubter/utils';
+import { IssueOptions, Message, StringShape } from 'doubter/core';
+import { createIssue, toIssueOptions } from 'doubter/utils';
 import isFQDN from 'validator/lib/isFQDN.js';
-import { CODE_FORMAT } from './constants';
+import { CODE_FQDN, MESSAGE_FQDN } from './constants';
 
 export interface FQDNOptions extends IssueOptions {
   /**
@@ -52,13 +52,6 @@ export interface FQDNOptions extends IssueOptions {
 }
 
 declare module 'doubter/core' {
-  export interface Messages {
-    /**
-     * @default "Must be a fully qualified domain name"
-     */
-    'string.format.fqdn': Message | Any;
-  }
-
   interface StringShape {
     /**
      * Check if the string is a fully qualified domain name (e.g. `domain.com`).
@@ -66,16 +59,14 @@ declare module 'doubter/core' {
      * @param options The issue options or the issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
-     * @plugin {@link plugin-string-format/fqdn! plugin-string-format/fqdn}
+     * @plugin {@link fqdn! plugin-string-format/fqdn}
      */
     fqdn(options?: FQDNOptions | Message): this;
   }
 }
 
 export default function enableFQDNFormat(ctor: typeof StringShape): void {
-  ctor.messages['string.format.fqdn'] = 'Must be a fully qualified domain name';
-
-  ctor.prototype.fqdn = function (options) {
+  ctor.prototype.fqdn = function (issueOptions) {
     const {
       requireTLD = true,
       allowUnderscores = false,
@@ -83,37 +74,35 @@ export default function enableFQDNFormat(ctor: typeof StringShape): void {
       allowNumericTLD = false,
       allowWildcard = false,
       ignoreMaxLength = false,
-    } = extractOptions(options);
-
-    const param = {
-      format: 'fqdn',
-      requireTLD,
-      allowUnderscores,
-      allowTrailingDot,
-      allowNumericTLD,
-      allowWildcard,
-      ignoreMaxLength,
-    };
-
-    const fqdnOptions = {
-      require_tld: requireTLD,
-      allow_underscores: allowUnderscores,
-      allow_trailing_dot: allowTrailingDot,
-      allow_numeric_tld: allowNumericTLD,
-      allow_wildcard: allowWildcard,
-      ignore_max_length: ignoreMaxLength,
-    };
-
-    const issueFactory = createIssueFactory(CODE_FORMAT, ctor.messages['string.format.fqdn'], options, param);
+    } = toIssueOptions(issueOptions);
 
     return this.addOperation(
       (value, param, options) => {
-        if (isFQDN(value, fqdnOptions)) {
+        if (
+          isFQDN(value, {
+            require_tld: param.requireTLD,
+            allow_underscores: param.allowUnderscores,
+            allow_trailing_dot: param.allowTrailingDot,
+            allow_numeric_tld: param.allowNumericTLD,
+            allow_wildcard: param.allowWildcard,
+            ignore_max_length: param.ignoreMaxLength,
+          })
+        ) {
           return null;
         }
-        return [issueFactory(value, options)];
+        return [createIssue(CODE_FQDN, value, MESSAGE_FQDN, param, options, issueOptions)];
       },
-      { type: CODE_FORMAT, param }
+      {
+        type: CODE_FQDN,
+        param: {
+          requireTLD,
+          allowUnderscores,
+          allowTrailingDot,
+          allowNumericTLD,
+          allowWildcard,
+          ignoreMaxLength,
+        },
+      }
     );
   };
 }

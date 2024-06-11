@@ -1,5 +1,5 @@
 /**
- * The plugin that enhances {@link plugin-string-format!StringShape StringShape} with the UUID (Universally unique
+ * The plugin that enhances {@link index!StringShape StringShape} with the UUID (Universally unique
  * identifier) check.
  *
  * ```ts
@@ -9,25 +9,19 @@
  * enableUUIDFormat(StringShape);
  * ```
  *
- * @module plugin-string-format/uuid
+ * @module uuid
  */
 
-import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
-import { createIssueFactory, extractOptions } from 'doubter/utils';
-import { CODE_FORMAT } from './constants';
+import { IssueOptions, Message, StringShape } from 'doubter/core';
+import { createIssue, toIssueOptions } from 'doubter/utils';
+import isUUID from 'validator/lib/isUUID.js';
+import { CODE_UUID, MESSAGE_UUID } from './constants';
 
 export interface UUIDOptions extends IssueOptions {
-  version?: 1 | 2 | 3 | 4 | 5 | 'any';
+  version?: 1 | 2 | 3 | 4 | 5;
 }
 
 declare module 'doubter/core' {
-  export interface Messages {
-    /**
-     * @default "Must be a UUID"
-     */
-    'string.format.uuid': Message | Any;
-  }
-
   interface StringShape {
     /**
      * Check if the string is a UUID (Universally unique identifier).
@@ -35,40 +29,24 @@ declare module 'doubter/core' {
      * @param options The issue options or the issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
-     * @plugin {@link plugin-string-format/uuid! plugin-string-format/uuid}
+     * @plugin {@link uuid! plugin-string-format/uuid}
      */
     uuid(options?: UUIDOptions | Message): this;
   }
 }
 
-const reMap = {
-  1: /^[0-9A-F]{8}-[0-9A-F]{4}-1[0-9A-F]{3}-[0-9A-F]{4}-[0-9A-F]{12}$/i,
-  2: /^[0-9A-F]{8}-[0-9A-F]{4}-2[0-9A-F]{3}-[0-9A-F]{4}-[0-9A-F]{12}$/i,
-  3: /^[0-9A-F]{8}-[0-9A-F]{4}-3[0-9A-F]{3}-[0-9A-F]{4}-[0-9A-F]{12}$/i,
-  4: /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i,
-  5: /^[0-9A-F]{8}-[0-9A-F]{4}-5[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i,
-  any: /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i,
-};
-
 export default function enableUUIDFormat(ctor: typeof StringShape): void {
-  ctor.messages['string.format.uuid'] = 'Must be a UUID';
-
-  ctor.prototype.uuid = function (options) {
-    const { version = 'any' } = extractOptions(options);
-
-    const re = reMap[version];
-    const param = { format: 'uuid', version };
-
-    const issueFactory = createIssueFactory(CODE_FORMAT, ctor.messages['string.format.uuid'], options, param);
+  ctor.prototype.uuid = function (issueOptions) {
+    const { version } = toIssueOptions(issueOptions);
 
     return this.addOperation(
       (value, param, options) => {
-        if (re !== undefined && re.test(value)) {
+        if (isUUID(value, param.version)) {
           return null;
         }
-        return [issueFactory(value, options)];
+        return [createIssue(CODE_UUID, value, MESSAGE_UUID, param, options, issueOptions)];
       },
-      { type: CODE_FORMAT, param }
+      { type: CODE_UUID, param: { version } }
     );
   };
 }

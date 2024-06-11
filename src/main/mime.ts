@@ -1,5 +1,5 @@
 /**
- * The plugin that enhances {@link plugin-string-format!StringShape StringShape} with the
+ * The plugin that enhances {@link index!StringShape StringShape} with the
  * [MIME type](https://en.wikipedia.org/wiki/Media_type) check.
  *
  * ```ts
@@ -9,22 +9,15 @@
  * enableMIMEFormat(StringShape);
  * ```
  *
- * @module plugin-string-format/mime
+ * @module mime
  */
 
-import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
-import { createIssueFactory } from 'doubter/utils';
+import { IssueOptions, Message, StringShape } from 'doubter/core';
+import { createIssue } from 'doubter/utils';
 import isMimeType from 'validator/lib/isMimeType.js';
-import { CODE_FORMAT } from './constants';
+import { CODE_MIME, MESSAGE_MIME } from './constants';
 
 declare module 'doubter/core' {
-  export interface Messages {
-    /**
-     * @default "Must be a MIME type"
-     */
-    'string.format.mime': Message | Any;
-  }
-
   interface StringShape {
     /**
      * Check if the string matches to a valid [MIME type](https://en.wikipedia.org/wiki/Media_type) format.
@@ -32,28 +25,22 @@ declare module 'doubter/core' {
      * @param options The issue options or the issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
-     * @plugin {@link plugin-string-format/mime! plugin-string-format/mime}
+     * @plugin {@link mime! plugin-string-format/mime}
      */
     mime(options?: IssueOptions | Message): this;
   }
 }
 
 export default function enableMIMEFormat(ctor: typeof StringShape): void {
-  ctor.messages['string.format.mime'] = 'Must be a MIME type';
-
-  ctor.prototype.mime = function (options) {
-    const param = { format: 'mime' };
-
-    const issueFactory = createIssueFactory(CODE_FORMAT, ctor.messages['string.format.mime'], options, param);
-
+  ctor.prototype.mime = function (issueOptions) {
     return this.addOperation(
       (value, param, options) => {
         if (isMimeType(value)) {
           return null;
         }
-        return [issueFactory(value, options)];
+        return [createIssue(CODE_MIME, value, MESSAGE_MIME, param, options, issueOptions)];
       },
-      { type: CODE_FORMAT, param }
+      { type: CODE_MIME }
     );
   };
 }

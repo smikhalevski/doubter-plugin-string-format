@@ -1,5 +1,5 @@
 /**
- * The plugin that enhances {@link plugin-string-format!StringShape StringShape} with the BIC (Bank Identification
+ * The plugin that enhances {@link index!StringShape StringShape} with the BIC (Bank Identification
  * Code) check.
  *
  * ```ts
@@ -9,22 +9,15 @@
  * enableBICFormat(StringShape);
  * ```
  *
- * @module plugin-string-format/bic
+ * @module bic
  */
 
-import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
-import { createIssueFactory } from 'doubter/utils';
+import { IssueOptions, Message, StringShape } from 'doubter/core';
+import { createIssue } from 'doubter/utils';
 import isBIC from 'validator/lib/isBIC.js';
-import { CODE_FORMAT } from './constants';
+import { CODE_BIC, MESSAGE_BIC } from './constants';
 
 declare module 'doubter/core' {
-  export interface Messages {
-    /**
-     * @default "Must be a BIC or SWIFT code"
-     */
-    'string.format.bic': Message | Any;
-  }
-
   interface StringShape {
     /**
      * Check if the string is a BIC (Bank Identification Code) or SWIFT code.
@@ -32,28 +25,22 @@ declare module 'doubter/core' {
      * @param options The issue options or the issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
-     * @plugin {@link plugin-string-format/bic! plugin-string-format/bic}
+     * @plugin {@link bic! plugin-string-format/bic}
      */
     bic(options?: IssueOptions | Message): this;
   }
 }
 
 export default function enableBICFormat(ctor: typeof StringShape): void {
-  ctor.messages['string.format.bic'] = 'Must be a BIC or SWIFT code';
-
-  ctor.prototype.bic = function (options) {
-    const param = { format: 'bic' };
-
-    const issueFactory = createIssueFactory(CODE_FORMAT, ctor.messages['string.format.bic'], options, param);
-
+  ctor.prototype.bic = function (issueOptions) {
     return this.addOperation(
       (value, param, options) => {
         if (isBIC(value)) {
           return null;
         }
-        return [issueFactory(value, options)];
+        return [createIssue(CODE_BIC, value, MESSAGE_BIC, param, options, issueOptions)];
       },
-      { type: CODE_FORMAT, param }
+      { type: CODE_BIC }
     );
   };
 }

@@ -1,5 +1,5 @@
 /**
- * The plugin that enhances {@link plugin-string-format!StringShape StringShape} with the email check.
+ * The plugin that enhances {@link index!StringShape StringShape} with the email check.
  *
  * ```ts
  * import { StringShape } from 'doubter/core';
@@ -8,13 +8,13 @@
  * enableEmailFormat(StringShape);
  * ```
  *
- * @module plugin-string-format/email
+ * @module email
  */
 
-import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
+import { IssueOptions, Message, StringShape } from 'doubter/core';
+import { createIssue, toIssueOptions } from 'doubter/utils';
 import isEmail from 'validator/lib/isEmail.js';
-import { createIssueFactory, extractOptions } from 'doubter/utils';
-import { CODE_FORMAT } from './constants';
+import { CODE_EMAIL, MESSAGE_EMAIL } from './constants';
 
 export interface EmailOptions extends IssueOptions {
   /**
@@ -76,13 +76,6 @@ export interface EmailOptions extends IssueOptions {
 }
 
 declare module 'doubter/core' {
-  export interface Messages {
-    /**
-     * @default "Must be an email"
-     */
-    'string.format.email': Message | Any;
-  }
-
   interface StringShape {
     /**
      * Check if the string is an email.
@@ -90,16 +83,14 @@ declare module 'doubter/core' {
      * @param options The issue options or the issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
-     * @plugin {@link plugin-string-format/email! plugin-string-format/email}
+     * @plugin {@link email! plugin-string-format/email}
      */
     email(options?: EmailOptions | Message): this;
   }
 }
 
 export default function enableEmailFormat(ctor: typeof StringShape): void {
-  ctor.messages['string.format.email'] = 'Must be an email';
-
-  ctor.prototype.email = function (options) {
+  ctor.prototype.email = function (issueOptions) {
     const {
       requireDisplayName = false,
       allowDisplayName = false,
@@ -110,43 +101,41 @@ export default function enableEmailFormat(ctor: typeof StringShape): void {
       hostWhitelist = [],
       requireTLD = true,
       blacklistedChars = '',
-    } = extractOptions(options);
-
-    const param = {
-      format: 'email',
-      requireDisplayName,
-      allowDisplayName,
-      allowIPDomain,
-      allowUTF8LocalPart,
-      ignoreMaxLength,
-      hostBlacklist,
-      hostWhitelist,
-      requireTLD,
-      blacklistedChars,
-    };
-
-    const emailOptions = {
-      require_display_name: requireDisplayName,
-      allow_display_name: allowDisplayName,
-      allow_ip_domain: allowIPDomain,
-      allow_utf8_local_part: allowUTF8LocalPart,
-      ignore_max_length: ignoreMaxLength,
-      host_blacklist: hostBlacklist,
-      host_whitelist: hostWhitelist,
-      require_tld: requireTLD,
-      blacklisted_chars: blacklistedChars,
-    };
-
-    const issueFactory = createIssueFactory(CODE_FORMAT, ctor.messages['string.format.email'], options, param);
+    } = toIssueOptions(issueOptions);
 
     return this.addOperation(
       (value, param, options) => {
-        if (isEmail(value, emailOptions)) {
+        if (
+          isEmail(value, {
+            require_display_name: param.requireDisplayName,
+            allow_display_name: param.allowDisplayName,
+            allow_ip_domain: param.allowIPDomain,
+            allow_utf8_local_part: param.allowUTF8LocalPart,
+            ignore_max_length: param.ignoreMaxLength,
+            host_blacklist: param.hostBlacklist,
+            host_whitelist: param.hostWhitelist,
+            require_tld: param.requireTLD,
+            blacklisted_chars: param.blacklistedChars,
+          })
+        ) {
           return null;
         }
-        return [issueFactory(value, options)];
+        return [createIssue(CODE_EMAIL, value, MESSAGE_EMAIL, param, options, issueOptions)];
       },
-      { type: CODE_FORMAT, param }
+      {
+        type: CODE_EMAIL,
+        param: {
+          requireDisplayName,
+          allowDisplayName,
+          allowIPDomain,
+          allowUTF8LocalPart,
+          ignoreMaxLength,
+          hostBlacklist,
+          hostWhitelist,
+          requireTLD,
+          blacklistedChars,
+        },
+      }
     );
   };
 }

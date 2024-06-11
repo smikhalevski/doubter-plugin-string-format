@@ -1,6 +1,5 @@
 import * as d from 'doubter/core';
 import enableIMEIFormat from '../main/imei';
-import { CODE_FORMAT } from '../main/constants';
 
 enableIMEIFormat(d.StringShape);
 
@@ -14,11 +13,10 @@ describe('imei', () => {
       ok: false,
       issues: [
         {
-          code: CODE_FORMAT,
+          code: 'string.format.imei',
           input: 'foo',
           message: 'Must be an IMEI number',
           param: {
-            format: 'imei',
             allowHyphens: false,
           },
         },

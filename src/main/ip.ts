@@ -1,5 +1,5 @@
 /**
- * The plugin that enhances {@link plugin-string-format!StringShape StringShape} with the IP address check.
+ * The plugin that enhances {@link index!StringShape StringShape} with the IP address check.
  *
  * ```ts
  * import { StringShape } from 'doubter/core';
@@ -8,26 +8,19 @@
  * enableIPFormat(StringShape);
  * ```
  *
- * @module plugin-string-format/ip
+ * @module ip
  */
 
-import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
-import { createIssueFactory, extractOptions } from 'doubter/utils';
+import { IssueOptions, Message, StringShape } from 'doubter/core';
+import { createIssue, toIssueOptions } from 'doubter/utils';
 import isIP from 'validator/lib/isIP.js';
-import { CODE_FORMAT } from './constants';
+import { CODE_IP, MESSAGE_IP } from './constants';
 
 export interface IPOptions extends IssueOptions {
-  version?: 4 | 6 | 'any';
+  version?: 4 | 6;
 }
 
 declare module 'doubter/core' {
-  export interface Messages {
-    /**
-     * @default "Must be an IP address"
-     */
-    'string.format.ip': Message | Any;
-  }
-
   interface StringShape {
     /**
      * Check if the string is an IP address.
@@ -35,31 +28,24 @@ declare module 'doubter/core' {
      * @param options The issue options or the issue message.
      * @returns The clone of the shape.
      * @group Plugin Methods
-     * @plugin {@link plugin-string-format/ip! plugin-string-format/ip}
+     * @plugin {@link ip! ip}
      */
     ip(options?: IPOptions | Message): this;
   }
 }
 
 export default function enableIPFormat(ctor: typeof StringShape): void {
-  ctor.messages['string.format.ip'] = 'Must be an IP address';
-
-  ctor.prototype.ip = function (options) {
-    const { version = 'any' } = extractOptions(options);
-
-    const param = { format: 'ip', version };
-    const ipVersion = version === 'any' ? undefined : String(version);
-
-    const issueFactory = createIssueFactory(CODE_FORMAT, ctor.messages['string.format.ip'], options, param);
+  ctor.prototype.ip = function (issueOptions) {
+    const { version } = toIssueOptions(issueOptions);
 
     return this.addOperation(
       (value, param, options) => {
-        if (isIP(value, ipVersion)) {
+        if (isIP(value, param.version)) {
           return null;
         }
-        return [issueFactory(value, options)];
+        return [createIssue(CODE_IP, value, MESSAGE_IP, param, options, issueOptions)];
       },
-      { type: CODE_FORMAT, param }
+      { type: CODE_IP, param: { version } }
     );
   };
 }

@@ -1,6 +1,5 @@
 import * as d from 'doubter/core';
 import enableFQDNFormat from '../main/fqdn';
-import { CODE_FORMAT } from '../main/constants';
 
 enableFQDNFormat(d.StringShape);
 
@@ -14,11 +13,10 @@ describe('fqdn', () => {
       ok: false,
       issues: [
         {
-          code: CODE_FORMAT,
+          code: 'string.format.fqdn',
           input: 'foo',
           message: 'Must be a fully qualified domain name',
           param: {
-            format: 'fqdn',
             allowNumericTLD: false,
             allowTrailingDot: false,
             allowUnderscores: false,

@@ -1,1 +1,21 @@
-export const CODE_FORMAT = 'string.format';
+export const CODE_ASCII = 'string.format.ascii';
+export const CODE_BIC = 'string.format.bic';
+export const CODE_EMAIL = 'string.format.email';
+export const CODE_FQDN = 'string.format.fqdn';
+export const CODE_IMEI = 'string.format.imei';
+export const CODE_IP = 'string.format.ip';
+export const CODE_ISIN = 'string.format.isin';
+export const CODE_LUHN = 'string.format.luhn';
+export const CODE_MIME = 'string.format.mime';
+export const CODE_UUID = 'string.format.uuid';
+
+export const MESSAGE_ASCII = 'Must be an ASCII string';
+export const MESSAGE_BIC = 'Must be a BIC or SWIFT code';
+export const MESSAGE_EMAIL = 'Must be an email';
+export const MESSAGE_FQDN = 'Must be a fully qualified domain name';
+export const MESSAGE_IMEI = 'Must be an IMEI number';
+export const MESSAGE_IP = 'Must be an IP address';
+export const MESSAGE_ISIN = 'Must be an ISIN';
+export const MESSAGE_LUHN = 'Must be a Luhn number';
+export const MESSAGE_MIME = 'Must be a MIME type';
+export const MESSAGE_UUID = 'Must be a UUID';

@@ -1,6 +1,5 @@
 import * as d from 'doubter/core';
 import enableIPFormat from '../main/ip';
-import { CODE_FORMAT } from '../main/constants';
 
 enableIPFormat(d.StringShape);
 
@@ -15,12 +14,11 @@ describe('ip', () => {
       ok: false,
       issues: [
         {
-          code: CODE_FORMAT,
+          code: 'string.format.ip',
           input: 'foo',
           message: 'Must be an IP address',
           param: {
-            format: 'ip',
-            version: 'any',
+            version: undefined,
           },
         },
       ],
@@ -36,11 +34,10 @@ describe('ip', () => {
       ok: false,
       issues: [
         {
-          code: CODE_FORMAT,
+          code: 'string.format.ip',
           input: '2001:0db8:85a3:0000:0000:8a2e:0370:7334',
           message: 'Must be an IP address',
           param: {
-            format: 'ip',
             version: 4,
           },
         },
@@ -57,11 +54,10 @@ describe('ip', () => {
       ok: false,
       issues: [
         {
-          code: CODE_FORMAT,
+          code: 'string.format.ip',
           input: '192.0.2.146',
           message: 'Must be an IP address',
           param: {
-            format: 'ip',
             version: 6,
           },
         },
