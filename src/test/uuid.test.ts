@@ -1,6 +1,5 @@
 import * as d from 'doubter/core';
 import enableUUIDFormat from '../main/uuid';
-import { CODE_FORMAT } from '../main/constants';
 
 enableUUIDFormat(d.StringShape);
 
@@ -15,12 +14,11 @@ describe('uuid', () => {
       ok: false,
       issues: [
         {
-          code: CODE_FORMAT,
+          code: 'string.format.uuid',
           input: 'foo',
           message: 'Must be a UUID',
           param: {
-            format: 'uuid',
-            version: 'any',
+            version: undefined,
           },
         },
       ],
@@ -36,11 +34,10 @@ describe('uuid', () => {
       ok: false,
       issues: [
         {
-          code: CODE_FORMAT,
+          code: 'string.format.uuid',
           input: '834621e1-5f1d-46d7-baab-4b3e500c763d',
           message: 'Must be a UUID',
           param: {
-            format: 'uuid',
             version: 1,
           },
         },
@@ -57,11 +54,10 @@ describe('uuid', () => {
       ok: false,
       issues: [
         {
-          code: CODE_FORMAT,
+          code: 'string.format.uuid',
           input: '79d1a9a8-8894-11ee-b9d1-0242ac120002',
           message: 'Must be a UUID',
           param: {
-            format: 'uuid',
             version: 4,
           },
         },

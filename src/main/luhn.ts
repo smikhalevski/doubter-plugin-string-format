@@ -1,5 +1,5 @@
 /**
- * The plugin that enhances {@link plugin-string-format!StringShape StringShape} with the
+ * The plugin that enhances {@link index!StringShape StringShape} with the
  * [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm) check.
  *
  * ```ts
@@ -15,7 +15,7 @@
 import { IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssue } from 'doubter/utils';
 import isLuhnNumber from 'validator/lib/isLuhnNumber.js';
-import { CODE_FORMAT } from './constants';
+import { CODE_LUHN, MESSAGE_LUHN } from './constants';
 
 declare module 'doubter/core' {
   interface StringShape {
@@ -38,9 +38,9 @@ export default function enableLuhnFormat(ctor: typeof StringShape): void {
         if (isLuhnNumber(value)) {
           return null;
         }
-        return [createIssue(CODE_FORMAT, value, 'Must be a Luhn number', param, options, issueOptions)];
+        return [createIssue(CODE_LUHN, value, MESSAGE_LUHN, param, options, issueOptions)];
       },
-      { type: CODE_FORMAT, param: { format: 'luhn' } }
+      { type: CODE_LUHN }
     );
   };
 }

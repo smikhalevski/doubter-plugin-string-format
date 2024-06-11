@@ -1,5 +1,5 @@
 /**
- * The plugin that enhances {@link plugin-string-format!StringShape StringShape} with the IP address check.
+ * The plugin that enhances {@link index!StringShape StringShape} with the IP address check.
  *
  * ```ts
  * import { StringShape } from 'doubter/core';
@@ -14,10 +14,10 @@
 import { IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssue, toIssueOptions } from 'doubter/utils';
 import isIP from 'validator/lib/isIP.js';
-import { CODE_FORMAT } from './constants';
+import { CODE_IP, MESSAGE_IP } from './constants';
 
 export interface IPOptions extends IssueOptions {
-  version?: 4 | 6 | 'any';
+  version?: 4 | 6;
 }
 
 declare module 'doubter/core' {
@@ -36,19 +36,16 @@ declare module 'doubter/core' {
 
 export default function enableIPFormat(ctor: typeof StringShape): void {
   ctor.prototype.ip = function (issueOptions) {
-    const { version = 'any' } = toIssueOptions(issueOptions);
-
-    const param = { format: 'ip', version };
-    const ipVersion = version === 'any' ? undefined : String(version);
+    const { version } = toIssueOptions(issueOptions);
 
     return this.addOperation(
       (value, param, options) => {
-        if (isIP(value, ipVersion)) {
+        if (isIP(value, param.version)) {
           return null;
         }
-        return [createIssue(CODE_FORMAT, value, 'Must be an IP address', param, options, issueOptions)];
+        return [createIssue(CODE_IP, value, MESSAGE_IP, param, options, issueOptions)];
       },
-      { type: CODE_FORMAT, param }
+      { type: CODE_IP, param: { version } }
     );
   };
 }

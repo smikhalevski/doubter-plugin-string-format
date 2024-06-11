@@ -35,10 +35,10 @@ emailShape.parse('foo@bar.com');
 // ⮕ 'foo@bar.com'
 
 emailShape.parse('foo');
-// ❌ ValidationError: string.format at /: Must be an email
+// ❌ ValidationError: string.format.email at /: Must be an email
 ```
 
-Cherry-pick separate format checkers:
+Or cherry-pick separate format checkers:
 
 ```ts
 import * as d from 'doubter';
@@ -53,12 +53,19 @@ bicShape.parse('BOFAUS3N');
 // ⮕ 'BOFAUS3N'
 
 bicShape.parse('QUX');
-// ❌ ValidationError: string.format at /: Must be a BIC or SWIFT code
+// ❌ ValidationError: string.format.bic at /: Must be a BIC or SWIFT code
+```
+
+In some cases `enableStringFormat` call may be tree shaken by a bundler.
+Add [`/*@__NOINLINE__*/`](https://terser.org/docs/miscellaneous/#annotations) annotation to prevent this behaviour:
+
+```ts
+/*@__NOINLINE__*/ enableStringForma(d.StringShape);
 ```
 
 # Validation issues
 
-Format checks raise issues with `"string.format"` code.
+Format checks raise issues with [`"string.format.*"`](./src/main/constants.ts) code.
 
 ```ts
 d.string().email().try('foo');
@@ -71,11 +78,10 @@ The code above would return an `Err` result:
   ok: false,
   issues: [
     {
-      code: 'string.format',
+      code: 'string.format.email',
       input: 'foo',
       message: 'Must be an email',
       param: {
-        format: 'email',
         allowDisplayName: false,
         allowIPDomain: false,
         allowUTF8LocalPart: true,
@@ -84,32 +90,35 @@ The code above would return an `Err` result:
         hostWhitelist: [],
         ignoreMaxLength: false,
         requireDisplayName: false,
-        requireTLD: true,
-      },
-    },
-  ],
+        requireTLD: true
+      }
+    }
+  ]
 }
 ```
 
-Use `.issues[].param.format` to detect the exact format that was violated.
-
 # Localization
 
-The default issue messages used by this plugin can be globally configured through
-[`d.Shape.messages`](https://smikhalevski.github.io/doubter/latest/classes/core.Shape.html#messages):
+Provide [`messages`](https://smikhalevski.github.io/doubter/latest/interfaces/core.ParseOptions.html#messages) option
+to parsing methods:
 
 ```ts
-d.Shape.messages['string.format.email'] = 'Invalid email';
-
 const emailShape = d.string().email();
 
-emailShape.parse('foo');
-// ❌ ValidationError: string.format at /: Invalid email
+emailShape.parse('foo', {
+  messages: {
+    'string.format.email': 'Invalid email'
+  }
+});
+// ❌ ValidationError: string.format.email at /: Invalid email
 ```
 
 Or pass a message directly to a plugin method:
 
 ```ts
 d.string().email('Not an email').parse('foo');
-// ❌ ValidationError: string.format at /: Not an email
+// ❌ ValidationError: string.format.email at /: Not an email
 ```
+
+More details in the [Localization](https://github.com/smikhalevski/doubter?tab=readme-ov-file#localization) section of
+Doubter docs.

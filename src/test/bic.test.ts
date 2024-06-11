@@ -1,6 +1,5 @@
 import * as d from 'doubter/core';
 import enableBICFormat from '../main/bic';
-import { CODE_FORMAT } from '../main/constants';
 
 enableBICFormat(d.StringShape);
 
@@ -14,12 +13,9 @@ describe('bic', () => {
       ok: false,
       issues: [
         {
-          code: CODE_FORMAT,
+          code: 'string.format.bic',
           input: 'foo',
           message: 'Must be a BIC or SWIFT code',
-          param: {
-            format: 'bic',
-          },
         },
       ],
     });

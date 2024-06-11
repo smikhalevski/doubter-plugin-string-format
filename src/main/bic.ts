@@ -1,5 +1,5 @@
 /**
- * The plugin that enhances {@link plugin-string-format!StringShape StringShape} with the BIC (Bank Identification
+ * The plugin that enhances {@link index!StringShape StringShape} with the BIC (Bank Identification
  * Code) check.
  *
  * ```ts
@@ -15,7 +15,7 @@
 import { IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssue } from 'doubter/utils';
 import isBIC from 'validator/lib/isBIC.js';
-import { CODE_FORMAT } from './constants';
+import { CODE_BIC, MESSAGE_BIC } from './constants';
 
 declare module 'doubter/core' {
   interface StringShape {
@@ -38,9 +38,9 @@ export default function enableBICFormat(ctor: typeof StringShape): void {
         if (isBIC(value)) {
           return null;
         }
-        return [createIssue(CODE_FORMAT, value, 'Must be a BIC or SWIFT code', param, options, issueOptions)];
+        return [createIssue(CODE_BIC, value, MESSAGE_BIC, param, options, issueOptions)];
       },
-      { type: CODE_FORMAT, param: { format: 'bic' } }
+      { type: CODE_BIC }
     );
   };
 }

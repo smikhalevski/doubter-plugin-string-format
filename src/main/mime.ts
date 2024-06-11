@@ -1,5 +1,5 @@
 /**
- * The plugin that enhances {@link plugin-string-format!StringShape StringShape} with the
+ * The plugin that enhances {@link index!StringShape StringShape} with the
  * [MIME type](https://en.wikipedia.org/wiki/Media_type) check.
  *
  * ```ts
@@ -12,19 +12,12 @@
  * @module mime
  */
 
-import { Any, IssueOptions, Message, StringShape } from 'doubter/core';
+import { IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssue } from 'doubter/utils';
 import isMimeType from 'validator/lib/isMimeType.js';
-import { CODE_FORMAT } from './constants';
+import { CODE_MIME, MESSAGE_MIME } from './constants';
 
 declare module 'doubter/core' {
-  export interface Messages {
-    /**
-     * @default "Must be a MIME type"
-     */
-    'string.format.mime': Message | Any;
-  }
-
   interface StringShape {
     /**
      * Check if the string matches to a valid [MIME type](https://en.wikipedia.org/wiki/Media_type) format.
@@ -45,9 +38,9 @@ export default function enableMIMEFormat(ctor: typeof StringShape): void {
         if (isMimeType(value)) {
           return null;
         }
-        return [createIssue(CODE_FORMAT, value, 'Must be a MIME type', param, options, issueOptions)];
+        return [createIssue(CODE_MIME, value, MESSAGE_MIME, param, options, issueOptions)];
       },
-      { type: CODE_FORMAT, param: { format: 'mime' } }
+      { type: CODE_MIME }
     );
   };
 }

@@ -1,5 +1,5 @@
 /**
- * The plugin that enhances {@link plugin-string-format!StringShape StringShape} with the ASCII check.
+ * The plugin that enhances {@link index!StringShape StringShape} with the ASCII check.
  *
  * ```ts
  * import { StringShape } from 'doubter/core';
@@ -13,7 +13,7 @@
 
 import { IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssue } from 'doubter/utils';
-import { CODE_FORMAT } from './constants';
+import { CODE_ASCII, MESSAGE_ASCII } from './constants';
 
 declare module 'doubter/core' {
   interface StringShape {
@@ -29,18 +29,18 @@ declare module 'doubter/core' {
   }
 }
 
-const re = /^[\x00-\x7F]+$/;
+const pattern = /^[\x00-\x7F]+$/;
 
 export default function enableASCIIFormat(ctor: typeof StringShape): void {
   ctor.prototype.ascii = function (issueOptions) {
     return this.addOperation(
       (value, param, options) => {
-        if (re.test(value)) {
+        if (pattern.test(value)) {
           return null;
         }
-        return [createIssue(CODE_FORMAT, value, 'Must be an ASCII string', param, options, issueOptions)];
+        return [createIssue(CODE_ASCII, value, MESSAGE_ASCII, param, options, issueOptions)];
       },
-      { type: CODE_FORMAT, param: { format: 'ascii' } }
+      { type: CODE_ASCII }
     );
   };
 }

@@ -1,5 +1,5 @@
 /**
- * The plugin that enhances {@link plugin-string-format!StringShape StringShape} with the fully qualified domain name
+ * The plugin that enhances {@link index!StringShape StringShape} with the fully qualified domain name
  * check.
  *
  * ```ts
@@ -15,7 +15,7 @@
 import { IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssue, toIssueOptions } from 'doubter/utils';
 import isFQDN from 'validator/lib/isFQDN.js';
-import { CODE_FORMAT } from './constants';
+import { CODE_FQDN, MESSAGE_FQDN } from './constants';
 
 export interface FQDNOptions extends IssueOptions {
   /**
@@ -76,33 +76,33 @@ export default function enableFQDNFormat(ctor: typeof StringShape): void {
       ignoreMaxLength = false,
     } = toIssueOptions(issueOptions);
 
-    const param = {
-      format: 'fqdn',
-      requireTLD,
-      allowUnderscores,
-      allowTrailingDot,
-      allowNumericTLD,
-      allowWildcard,
-      ignoreMaxLength,
-    };
-
-    const fqdnOptions = {
-      require_tld: requireTLD,
-      allow_underscores: allowUnderscores,
-      allow_trailing_dot: allowTrailingDot,
-      allow_numeric_tld: allowNumericTLD,
-      allow_wildcard: allowWildcard,
-      ignore_max_length: ignoreMaxLength,
-    };
-
     return this.addOperation(
       (value, param, options) => {
-        if (isFQDN(value, fqdnOptions)) {
+        if (
+          isFQDN(value, {
+            require_tld: param.requireTLD,
+            allow_underscores: param.allowUnderscores,
+            allow_trailing_dot: param.allowTrailingDot,
+            allow_numeric_tld: param.allowNumericTLD,
+            allow_wildcard: param.allowWildcard,
+            ignore_max_length: param.ignoreMaxLength,
+          })
+        ) {
           return null;
         }
-        return [createIssue(CODE_FORMAT, value, 'Must be a fully qualified domain name', param, options, issueOptions)];
+        return [createIssue(CODE_FQDN, value, MESSAGE_FQDN, param, options, issueOptions)];
       },
-      { type: CODE_FORMAT, param }
+      {
+        type: CODE_FQDN,
+        param: {
+          requireTLD,
+          allowUnderscores,
+          allowTrailingDot,
+          allowNumericTLD,
+          allowWildcard,
+          ignoreMaxLength,
+        },
+      }
     );
   };
 }

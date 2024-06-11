@@ -1,5 +1,5 @@
 /**
- * The plugin that enhances {@link plugin-string-format!StringShape StringShape} with the
+ * The plugin that enhances {@link index!StringShape StringShape} with the
  * [IMEI number](https://en.wikipedia.org/wiki/International_Mobile_Equipment_Identity) check.
  *
  * ```ts
@@ -15,7 +15,7 @@
 import { IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssue, toIssueOptions } from 'doubter/utils';
 import isIMEI from 'validator/lib/isIMEI.js';
-import { CODE_FORMAT } from './constants';
+import { CODE_IMEI, MESSAGE_IMEI } from './constants';
 
 export interface IMEIOptions extends IssueOptions {
   /**
@@ -45,18 +45,14 @@ export default function enableIMEIFormat(ctor: typeof StringShape): void {
   ctor.prototype.imei = function (issueOptions) {
     const { allowHyphens = false } = toIssueOptions(issueOptions);
 
-    const param = { format: 'imei', allowHyphens };
-
-    const imeiOptions = { allow_hyphens: allowHyphens };
-
     return this.addOperation(
       (value, param, options) => {
-        if (isIMEI(value, imeiOptions)) {
+        if (isIMEI(value, { allow_hyphens: param.allowHyphens })) {
           return null;
         }
-        return [createIssue(CODE_FORMAT, value, 'Must be an IMEI number', param, options, issueOptions)];
+        return [createIssue(CODE_IMEI, value, MESSAGE_IMEI, param, options, issueOptions)];
       },
-      { type: CODE_FORMAT, param }
+      { type: CODE_IMEI, param: { allowHyphens } }
     );
   };
 }

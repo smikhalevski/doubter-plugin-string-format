@@ -1,5 +1,5 @@
 /**
- * The plugin that enhances {@link plugin-string-format!StringShape StringShape} with additional checks.
+ * The plugin that enhances {@link index!StringShape StringShape} with additional checks.
  *
  * ```ts
  * import { StringShape } from 'doubter/core';
@@ -8,7 +8,7 @@
  * enableStringFormat(StringShape);
  * ```
  *
- * @module plugin-string-format
+ * @module index
  */
 
 export * from './index';

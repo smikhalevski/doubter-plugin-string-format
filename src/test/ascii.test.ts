@@ -1,6 +1,5 @@
 import * as d from 'doubter/core';
 import enableASCIIFormat from '../main/ascii';
-import { CODE_FORMAT } from '../main/constants';
 
 enableASCIIFormat(d.StringShape);
 
@@ -14,12 +13,24 @@ describe('ascii', () => {
       ok: false,
       issues: [
         {
-          code: CODE_FORMAT,
+          code: 'string.format.ascii',
           input: 'ббб',
           message: 'Must be an ASCII string',
-          param: {
-            format: 'ascii',
-          },
+        },
+      ],
+    });
+  });
+
+  test('respects messages', () => {
+    const shape = d.string().ascii();
+
+    expect(shape.try('ббб', { messages: { 'string.format.ascii': 'Not na ASCII' } })).toEqual({
+      ok: false,
+      issues: [
+        {
+          code: 'string.format.ascii',
+          input: 'ббб',
+          message: 'Not na ASCII',
         },
       ],
     });

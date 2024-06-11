@@ -1,5 +1,5 @@
 /**
- * The plugin that enhances {@link plugin-string-format!StringShape StringShape} with the
+ * The plugin that enhances {@link index!StringShape StringShape} with the
  * [ISIN](https://en.wikipedia.org/wiki/International_Securities_Identification_Number) (stock/security identifier)
  * check.
  *
@@ -16,7 +16,7 @@
 import { IssueOptions, Message, StringShape } from 'doubter/core';
 import { createIssue } from 'doubter/utils';
 import isISIN from 'validator/lib/isISIN.js';
-import { CODE_FORMAT } from './constants';
+import { CODE_ISIN, MESSAGE_ISIN } from './constants';
 
 declare module 'doubter/core' {
   interface StringShape {
@@ -40,9 +40,9 @@ export default function enableISINFormat(ctor: typeof StringShape): void {
         if (isISIN(value)) {
           return null;
         }
-        return [createIssue(CODE_FORMAT, value, 'Must be an ISIN', param, options, issueOptions)];
+        return [createIssue(CODE_ISIN, value, MESSAGE_ISIN, param, options, issueOptions)];
       },
-      { type: CODE_FORMAT, param: { format: 'isin' } }
+      { type: CODE_ISIN }
     );
   };
 }
