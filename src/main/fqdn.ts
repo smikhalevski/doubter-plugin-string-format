@@ -3,10 +3,10 @@
  * check.
  *
  * ```ts
- * import { StringShape } from 'doubter/core';
- * import enableFQDNFormat from '@doubter/plugin-string-format/fqdn';
+ * import * as d from 'doubter/core';
+ * import '@doubter/plugin-string-format/fqdn';
  *
- * enableFQDNFormat(StringShape);
+ * d.string().fqdn();
  * ```
  *
  * @module fqdn
@@ -65,44 +65,42 @@ declare module 'doubter/core' {
   }
 }
 
-export default function enableFQDNFormat(ctor: typeof StringShape): void {
-  ctor.prototype.fqdn = function (issueOptions) {
-    const {
-      requireTLD = true,
-      allowUnderscores = false,
-      allowTrailingDot = false,
-      allowNumericTLD = false,
-      allowWildcard = false,
-      ignoreMaxLength = false,
-    } = toIssueOptions(issueOptions);
+StringShape.prototype.fqdn = function (issueOptions) {
+  const {
+    requireTLD = true,
+    allowUnderscores = false,
+    allowTrailingDot = false,
+    allowNumericTLD = false,
+    allowWildcard = false,
+    ignoreMaxLength = false,
+  } = toIssueOptions(issueOptions);
 
-    return this.addOperation(
-      (value, param, options) => {
-        if (
-          isFQDN(value, {
-            require_tld: param.requireTLD,
-            allow_underscores: param.allowUnderscores,
-            allow_trailing_dot: param.allowTrailingDot,
-            allow_numeric_tld: param.allowNumericTLD,
-            allow_wildcard: param.allowWildcard,
-            ignore_max_length: param.ignoreMaxLength,
-          })
-        ) {
-          return null;
-        }
-        return [createIssue(CODE_FQDN, value, MESSAGE_FQDN, param, options, issueOptions)];
-      },
-      {
-        type: CODE_FQDN,
-        param: {
-          requireTLD,
-          allowUnderscores,
-          allowTrailingDot,
-          allowNumericTLD,
-          allowWildcard,
-          ignoreMaxLength,
-        },
+  return this.addOperation(
+    (value, param, options) => {
+      if (
+        isFQDN(value, {
+          require_tld: param.requireTLD,
+          allow_underscores: param.allowUnderscores,
+          allow_trailing_dot: param.allowTrailingDot,
+          allow_numeric_tld: param.allowNumericTLD,
+          allow_wildcard: param.allowWildcard,
+          ignore_max_length: param.ignoreMaxLength,
+        })
+      ) {
+        return null;
       }
-    );
-  };
-}
+      return [createIssue(CODE_FQDN, value, MESSAGE_FQDN, param, options, issueOptions)];
+    },
+    {
+      type: CODE_FQDN,
+      param: {
+        requireTLD,
+        allowUnderscores,
+        allowTrailingDot,
+        allowNumericTLD,
+        allowWildcard,
+        ignoreMaxLength,
+      },
+    }
+  );
+};

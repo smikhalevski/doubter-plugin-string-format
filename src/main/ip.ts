@@ -2,10 +2,10 @@
  * The plugin that enhances {@link index!StringShape StringShape} with the IP address check.
  *
  * ```ts
- * import { StringShape } from 'doubter/core';
- * import enableIPFormat from '@doubter/plugin-string-format/ip';
+ * import * as d from 'doubter/core';
+ * import '@doubter/plugin-string-format/ip';
  *
- * enableIPFormat(StringShape);
+ * d.string().ip();
  * ```
  *
  * @module ip
@@ -34,18 +34,16 @@ declare module 'doubter/core' {
   }
 }
 
-export default function enableIPFormat(ctor: typeof StringShape): void {
-  ctor.prototype.ip = function (issueOptions) {
-    const { version } = toIssueOptions(issueOptions);
+StringShape.prototype.ip = function (issueOptions) {
+  const { version } = toIssueOptions(issueOptions);
 
-    return this.addOperation(
-      (value, param, options) => {
-        if (isIP(value, param.version)) {
-          return null;
-        }
-        return [createIssue(CODE_IP, value, MESSAGE_IP, param, options, issueOptions)];
-      },
-      { type: CODE_IP, param: { version } }
-    );
-  };
-}
+  return this.addOperation(
+    (value, param, options) => {
+      if (isIP(value, param.version)) {
+        return null;
+      }
+      return [createIssue(CODE_IP, value, MESSAGE_IP, param, options, issueOptions)];
+    },
+    { type: CODE_IP, param: { version } }
+  );
+};

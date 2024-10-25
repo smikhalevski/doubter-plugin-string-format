@@ -1,7 +1,5 @@
 import * as d from 'doubter/core';
-import enableIPFormat from '../main/ip';
-
-enableIPFormat(d.StringShape);
+import '../main/ip';
 
 describe('ip', () => {
   test('validates any IP by default', () => {

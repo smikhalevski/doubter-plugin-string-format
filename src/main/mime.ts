@@ -3,10 +3,10 @@
  * [MIME type](https://en.wikipedia.org/wiki/Media_type) check.
  *
  * ```ts
- * import { StringShape } from 'doubter/core';
- * import enableMIMEFormat from '@doubter/plugin-string-format/mime';
+ * import * as d from 'doubter/core';
+ * import '@doubter/plugin-string-format/mime';
  *
- * enableMIMEFormat(StringShape);
+ * d.string().mime();
  * ```
  *
  * @module mime
@@ -31,16 +31,14 @@ declare module 'doubter/core' {
   }
 }
 
-export default function enableMIMEFormat(ctor: typeof StringShape): void {
-  ctor.prototype.mime = function (issueOptions) {
-    return this.addOperation(
-      (value, param, options) => {
-        if (isMimeType(value)) {
-          return null;
-        }
-        return [createIssue(CODE_MIME, value, MESSAGE_MIME, param, options, issueOptions)];
-      },
-      { type: CODE_MIME }
-    );
-  };
-}
+StringShape.prototype.mime = function (issueOptions) {
+  return this.addOperation(
+    (value, param, options) => {
+      if (isMimeType(value)) {
+        return null;
+      }
+      return [createIssue(CODE_MIME, value, MESSAGE_MIME, param, options, issueOptions)];
+    },
+    { type: CODE_MIME }
+  );
+};

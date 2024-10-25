@@ -4,10 +4,10 @@
  * check.
  *
  * ```ts
- * import { StringShape } from 'doubter/core';
- * import enableISINFormat from '@doubter/plugin-string-format/isin';
+ * import * as d from 'doubter/core';
+ * import '@doubter/plugin-string-format/isin';
  *
- * enableISINFormat(StringShape);
+ * d.string().isin();
  * ```
  *
  * @module isin
@@ -33,16 +33,14 @@ declare module 'doubter/core' {
   }
 }
 
-export default function enableISINFormat(ctor: typeof StringShape): void {
-  ctor.prototype.isin = function (issueOptions) {
-    return this.addOperation(
-      (value, param, options) => {
-        if (isISIN(value)) {
-          return null;
-        }
-        return [createIssue(CODE_ISIN, value, MESSAGE_ISIN, param, options, issueOptions)];
-      },
-      { type: CODE_ISIN }
-    );
-  };
-}
+StringShape.prototype.isin = function (issueOptions) {
+  return this.addOperation(
+    (value, param, options) => {
+      if (isISIN(value)) {
+        return null;
+      }
+      return [createIssue(CODE_ISIN, value, MESSAGE_ISIN, param, options, issueOptions)];
+    },
+    { type: CODE_ISIN }
+  );
+};

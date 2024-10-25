@@ -3,10 +3,10 @@
  * [IMEI number](https://en.wikipedia.org/wiki/International_Mobile_Equipment_Identity) check.
  *
  * ```ts
- * import { StringShape } from 'doubter/core';
- * import enableIMEIFormat from '@doubter/plugin-string-format/imei';
+ * import * as d from 'doubter/core';
+ * import '@doubter/plugin-string-format/imei';
  *
- * enableIMEIFormat(StringShape);
+ * d.string().imei();
  * ```
  *
  * @module imei
@@ -41,18 +41,16 @@ declare module 'doubter/core' {
   }
 }
 
-export default function enableIMEIFormat(ctor: typeof StringShape): void {
-  ctor.prototype.imei = function (issueOptions) {
-    const { allowHyphens = false } = toIssueOptions(issueOptions);
+StringShape.prototype.imei = function (issueOptions) {
+  const { allowHyphens = false } = toIssueOptions(issueOptions);
 
-    return this.addOperation(
-      (value, param, options) => {
-        if (isIMEI(value, { allow_hyphens: param.allowHyphens })) {
-          return null;
-        }
-        return [createIssue(CODE_IMEI, value, MESSAGE_IMEI, param, options, issueOptions)];
-      },
-      { type: CODE_IMEI, param: { allowHyphens } }
-    );
-  };
-}
+  return this.addOperation(
+    (value, param, options) => {
+      if (isIMEI(value, { allow_hyphens: param.allowHyphens })) {
+        return null;
+      }
+      return [createIssue(CODE_IMEI, value, MESSAGE_IMEI, param, options, issueOptions)];
+    },
+    { type: CODE_IMEI, param: { allowHyphens } }
+  );
+};

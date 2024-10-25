@@ -3,10 +3,10 @@
  * Code) check.
  *
  * ```ts
- * import { StringShape } from 'doubter/core';
- * import enableBICFormat from '@doubter/plugin-string-format/bic';
+ * import * as d from 'doubter/core';
+ * import '@doubter/plugin-string-format/bic';
  *
- * enableBICFormat(StringShape);
+ * d.string().bic();
  * ```
  *
  * @module bic
@@ -31,16 +31,14 @@ declare module 'doubter/core' {
   }
 }
 
-export default function enableBICFormat(ctor: typeof StringShape): void {
-  ctor.prototype.bic = function (issueOptions) {
-    return this.addOperation(
-      (value, param, options) => {
-        if (isBIC(value)) {
-          return null;
-        }
-        return [createIssue(CODE_BIC, value, MESSAGE_BIC, param, options, issueOptions)];
-      },
-      { type: CODE_BIC }
-    );
-  };
-}
+StringShape.prototype.bic = function (issueOptions) {
+  return this.addOperation(
+    (value, param, options) => {
+      if (isBIC(value)) {
+        return null;
+      }
+      return [createIssue(CODE_BIC, value, MESSAGE_BIC, param, options, issueOptions)];
+    },
+    { type: CODE_BIC }
+  );
+};

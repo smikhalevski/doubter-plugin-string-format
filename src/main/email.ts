@@ -2,10 +2,10 @@
  * The plugin that enhances {@link index!StringShape StringShape} with the email check.
  *
  * ```ts
- * import { StringShape } from 'doubter/core';
- * import enableEmailFormat from '@doubter/plugin-string-format/email';
+ * import * as d from 'doubter/core';
+ * import '@doubter/plugin-string-format/email';
  *
- * enableEmailFormat(StringShape);
+ * d.string().email();
  * ```
  *
  * @module email
@@ -89,53 +89,51 @@ declare module 'doubter/core' {
   }
 }
 
-export default function enableEmailFormat(ctor: typeof StringShape): void {
-  ctor.prototype.email = function (issueOptions) {
-    const {
-      requireDisplayName = false,
-      allowDisplayName = false,
-      allowIPDomain = false,
-      allowUTF8LocalPart = true,
-      ignoreMaxLength = false,
-      hostBlacklist = [],
-      hostWhitelist = [],
-      requireTLD = true,
-      blacklistedChars = '',
-    } = toIssueOptions(issueOptions);
+StringShape.prototype.email = function (issueOptions) {
+  const {
+    requireDisplayName = false,
+    allowDisplayName = false,
+    allowIPDomain = false,
+    allowUTF8LocalPart = true,
+    ignoreMaxLength = false,
+    hostBlacklist = [],
+    hostWhitelist = [],
+    requireTLD = true,
+    blacklistedChars = '',
+  } = toIssueOptions(issueOptions);
 
-    return this.addOperation(
-      (value, param, options) => {
-        if (
-          isEmail(value, {
-            require_display_name: param.requireDisplayName,
-            allow_display_name: param.allowDisplayName,
-            allow_ip_domain: param.allowIPDomain,
-            allow_utf8_local_part: param.allowUTF8LocalPart,
-            ignore_max_length: param.ignoreMaxLength,
-            host_blacklist: param.hostBlacklist,
-            host_whitelist: param.hostWhitelist,
-            require_tld: param.requireTLD,
-            blacklisted_chars: param.blacklistedChars,
-          })
-        ) {
-          return null;
-        }
-        return [createIssue(CODE_EMAIL, value, MESSAGE_EMAIL, param, options, issueOptions)];
-      },
-      {
-        type: CODE_EMAIL,
-        param: {
-          requireDisplayName,
-          allowDisplayName,
-          allowIPDomain,
-          allowUTF8LocalPart,
-          ignoreMaxLength,
-          hostBlacklist,
-          hostWhitelist,
-          requireTLD,
-          blacklistedChars,
-        },
+  return this.addOperation(
+    (value, param, options) => {
+      if (
+        isEmail(value, {
+          require_display_name: param.requireDisplayName,
+          allow_display_name: param.allowDisplayName,
+          allow_ip_domain: param.allowIPDomain,
+          allow_utf8_local_part: param.allowUTF8LocalPart,
+          ignore_max_length: param.ignoreMaxLength,
+          host_blacklist: param.hostBlacklist,
+          host_whitelist: param.hostWhitelist,
+          require_tld: param.requireTLD,
+          blacklisted_chars: param.blacklistedChars,
+        })
+      ) {
+        return null;
       }
-    );
-  };
-}
+      return [createIssue(CODE_EMAIL, value, MESSAGE_EMAIL, param, options, issueOptions)];
+    },
+    {
+      type: CODE_EMAIL,
+      param: {
+        requireDisplayName,
+        allowDisplayName,
+        allowIPDomain,
+        allowUTF8LocalPart,
+        ignoreMaxLength,
+        hostBlacklist,
+        hostWhitelist,
+        requireTLD,
+        blacklistedChars,
+      },
+    }
+  );
+};

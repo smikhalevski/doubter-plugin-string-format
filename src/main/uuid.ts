@@ -3,10 +3,10 @@
  * identifier) check.
  *
  * ```ts
- * import { StringShape } from 'doubter/core';
- * import enableUUIDFormat from '@doubter/plugin-string-format/uuid';
+ * import * as d from 'doubter/core';
+ * import '@doubter/plugin-string-format/uuid';
  *
- * enableUUIDFormat(StringShape);
+ * d.string().uuid();
  * ```
  *
  * @module uuid
@@ -35,18 +35,16 @@ declare module 'doubter/core' {
   }
 }
 
-export default function enableUUIDFormat(ctor: typeof StringShape): void {
-  ctor.prototype.uuid = function (issueOptions) {
-    const { version } = toIssueOptions(issueOptions);
+StringShape.prototype.uuid = function (issueOptions) {
+  const { version } = toIssueOptions(issueOptions);
 
-    return this.addOperation(
-      (value, param, options) => {
-        if (isUUID(value, param.version)) {
-          return null;
-        }
-        return [createIssue(CODE_UUID, value, MESSAGE_UUID, param, options, issueOptions)];
-      },
-      { type: CODE_UUID, param: { version } }
-    );
-  };
-}
+  return this.addOperation(
+    (value, param, options) => {
+      if (isUUID(value, param.version)) {
+        return null;
+      }
+      return [createIssue(CODE_UUID, value, MESSAGE_UUID, param, options, issueOptions)];
+    },
+    { type: CODE_UUID, param: { version } }
+  );
+};

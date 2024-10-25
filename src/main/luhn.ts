@@ -3,10 +3,10 @@
  * [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm) check.
  *
  * ```ts
- * import { StringShape } from 'doubter/core';
- * import enableLuhnFormat from '@doubter/plugin-string-format/luhn';
+ * import * as d from 'doubter/core';
+ * import '@doubter/plugin-string-format/luhn';
  *
- * enableLuhnFormat(StringShape);
+ * d.string().luhn();
  * ```
  *
  * @module luhn
@@ -31,16 +31,14 @@ declare module 'doubter/core' {
   }
 }
 
-export default function enableLuhnFormat(ctor: typeof StringShape): void {
-  ctor.prototype.luhn = function (issueOptions) {
-    return this.addOperation(
-      (value, param, options) => {
-        if (isLuhnNumber(value)) {
-          return null;
-        }
-        return [createIssue(CODE_LUHN, value, MESSAGE_LUHN, param, options, issueOptions)];
-      },
-      { type: CODE_LUHN }
-    );
-  };
-}
+StringShape.prototype.luhn = function (issueOptions) {
+  return this.addOperation(
+    (value, param, options) => {
+      if (isLuhnNumber(value)) {
+        return null;
+      }
+      return [createIssue(CODE_LUHN, value, MESSAGE_LUHN, param, options, issueOptions)];
+    },
+    { type: CODE_LUHN }
+  );
+};
