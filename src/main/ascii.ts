@@ -2,10 +2,10 @@
  * The plugin that enhances {@link index!StringShape StringShape} with the ASCII check.
  *
  * ```ts
- * import { StringShape } from 'doubter/core';
- * import enableASCIIFormat from '@doubter/plugin-string-format/ascii';
+ * import * as d from 'doubter/core';
+ * import '@doubter/plugin-string-format/ascii';
  *
- * enableASCIIFormat(StringShape);
+ * d.string().ascii();
  * ```
  *
  * @module ascii
@@ -31,16 +31,14 @@ declare module 'doubter/core' {
 
 const pattern = /^[\x00-\x7F]+$/;
 
-export default function enableASCIIFormat(ctor: typeof StringShape): void {
-  ctor.prototype.ascii = function (issueOptions) {
-    return this.addOperation(
-      (value, param, options) => {
-        if (pattern.test(value)) {
-          return null;
-        }
-        return [createIssue(CODE_ASCII, value, MESSAGE_ASCII, param, options, issueOptions)];
-      },
-      { type: CODE_ASCII }
-    );
-  };
-}
+StringShape.prototype.ascii = function (issueOptions) {
+  return this.addOperation(
+    (value, param, options) => {
+      if (pattern.test(value)) {
+        return null;
+      }
+      return [createIssue(CODE_ASCII, value, MESSAGE_ASCII, param, options, issueOptions)];
+    },
+    { type: CODE_ASCII }
+  );
+};

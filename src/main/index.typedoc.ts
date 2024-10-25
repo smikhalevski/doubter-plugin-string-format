@@ -3,9 +3,7 @@
  *
  * ```ts
  * import { StringShape } from 'doubter/core';
- * import enableStringFormat from '@doubter/plugin-string-format';
- *
- * enableStringFormat(StringShape);
+ * import '@doubter/plugin-string-format';
  * ```
  *
  * @module index
@@ -16,7 +14,7 @@ export * from './index';
 import { StringShape } from 'doubter/core';
 
 /**
- * This a slice from {@link doubter!StringShape doubter/core/StringShape} that contains only methods added by through
+ * This a slice from {@link doubter!StringShape doubter/core/StringShape} that contains only methods added by
  * this package.
  */
 interface StringShape_

@@ -1,7 +1,5 @@
 import * as d from 'doubter/core';
-import enableFQDNFormat from '../main/fqdn';
-
-enableFQDNFormat(d.StringShape);
+import '../main/fqdn';
 
 describe('fqdn', () => {
   test('validates FQDN', () => {

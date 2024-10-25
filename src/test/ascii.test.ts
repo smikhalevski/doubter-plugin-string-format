@@ -1,7 +1,5 @@
 import * as d from 'doubter/core';
-import enableASCIIFormat from '../main/ascii';
-
-enableASCIIFormat(d.StringShape);
+import '../main/ascii';
 
 describe('ascii', () => {
   test('validates ASCII', () => {

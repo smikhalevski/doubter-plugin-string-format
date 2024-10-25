@@ -1,7 +1,5 @@
 import * as d from 'doubter/core';
-import enableIMEIFormat from '../main/imei';
-
-enableIMEIFormat(d.StringShape);
+import '../main/imei';
 
 describe('imei', () => {
   test('validates IMEI', () => {

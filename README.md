@@ -25,9 +25,7 @@ Import and enable the plugin:
 
 ```ts
 import * as d from 'doubter';
-import enableStringFormat from '@doubter/plugin-string-format';
-
-enableStringFormat(d.StringShape);
+import '@doubter/plugin-string-format';
 
 const emailShape = d.string().email();
 
@@ -43,9 +41,7 @@ Or cherry-pick separate format checkers:
 ```ts
 import * as d from 'doubter';
 // 🟡 Import a single format module
-import enableBICFormat from '@doubter/plugin-string-format/bic';
-
-enableBICFormat(d.StringShape);
+import '@doubter/plugin-string-format/bic';
 
 const bicShape = d.string().bic();
 
@@ -54,13 +50,6 @@ bicShape.parse('BOFAUS3N');
 
 bicShape.parse('QUX');
 // ❌ ValidationError: string.format.bic at /: Must be a BIC or SWIFT code
-```
-
-In some cases `enableStringFormat` call may be tree shaken by a bundler.
-Add [`/*@__NOINLINE__*/`](https://terser.org/docs/miscellaneous/#annotations) annotation to prevent this behaviour:
-
-```ts
-/*@__NOINLINE__*/ enableStringForma(d.StringShape);
 ```
 
 # Validation issues

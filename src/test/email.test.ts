@@ -1,7 +1,5 @@
 import * as d from 'doubter/core';
-import enableEmailFormat from '../main/email';
-
-enableEmailFormat(d.StringShape);
+import '../main/email';
 
 describe('email', () => {
   test('validates email', () => {

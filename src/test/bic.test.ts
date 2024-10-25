@@ -1,7 +1,5 @@
 import * as d from 'doubter/core';
-import enableBICFormat from '../main/bic';
-
-enableBICFormat(d.StringShape);
+import '../main/bic';
 
 describe('bic', () => {
   test('validates BIC', () => {

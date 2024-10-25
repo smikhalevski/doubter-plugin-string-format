@@ -1,7 +1,5 @@
 import * as d from 'doubter/core';
-import enableUUIDFormat from '../main/uuid';
-
-enableUUIDFormat(d.StringShape);
+import '../main/uuid';
 
 describe('uuid', () => {
   test('validates any UUID by default', () => {
